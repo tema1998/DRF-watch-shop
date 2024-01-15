@@ -1,0 +1,53 @@
+from django.shortcuts import render
+from rest_framework import viewsets, permissions, pagination, filters, generics
+from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer
+from .models import Product, Feedback
+from rest_framework.response import Response
+
+
+class PageNumberSetPagination(pagination.PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+    ordering = 'created_at'
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    search_fields = ['model', 'brand']
+    filter_backends = (filters.SearchFilter,)
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    lookup_field = 'slug'
+    permission_classes = [permissions.AllowAny]
+    pagination_class = PageNumberSetPagination
+
+
+class RegisterView(generics.GenericAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = RegisterSerializer
+
+    def post(self,request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "message": "Success",
+        })
+
+
+class ProfileView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        return Response({
+            "user": UserSerializer(request.user,
+                                   context=self.get_serializer_context()).data,
+        })
+
+
+class FeedbackView(generics.ListCreateAPIView):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
