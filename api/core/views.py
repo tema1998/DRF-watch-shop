@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, pagination, filters, generics
-from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer
-from .models import Product, Feedback
+from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer, ReviewsSerializer
+from .models import Product, Feedback, Reviews
 from rest_framework.response import Response
 
 
@@ -51,3 +51,13 @@ class FeedbackView(generics.ListCreateAPIView):
     serializer_class = FeedbackSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
+class ReviewsView(generics.ListCreateAPIView):
+    queryset = Reviews.objects.all()
+    serializer_class = ReviewsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        product_slug = self.kwargs['product_slug'].lower()
+        product = Product.objects.get(slug=product_slug)
+        return Reviews.objects.filter(product=product)
