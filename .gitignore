@@ -161,3 +161,6 @@ cython_debug/
 
 .idea/
 __pycache__/
+/api/core/__pycache__/
+/api/api/__pycache__/
+/api/api/__pycache__/
