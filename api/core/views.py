@@ -17,7 +17,6 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     lookup_field = 'slug'
-    permission_classes = [permissions.AllowAny]
     pagination_class = PageNumberSetPagination
 
 
@@ -49,13 +48,11 @@ class ProfileView(generics.GenericAPIView):
 class FeedbackView(generics.ListCreateAPIView):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class ReviewsView(generics.ListCreateAPIView):
     queryset = Reviews.objects.all()
     serializer_class = ReviewsSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         product_slug = self.kwargs['product_slug'].lower()
