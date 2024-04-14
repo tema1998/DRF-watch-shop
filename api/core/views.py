@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, pagination, filters, generics
+from rest_framework import viewsets, permissions, pagination, filters, generics, mixins
 from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer, ReviewsSerializer
 from .models import Product, Feedback, Reviews
 from rest_framework.response import Response
@@ -12,7 +12,7 @@ class PageNumberSetPagination(pagination.PageNumberPagination):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     search_fields = ['model', 'brand']
     filter_backends = (filters.SearchFilter,)
     serializer_class = ProductSerializer
