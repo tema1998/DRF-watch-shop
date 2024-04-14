@@ -69,8 +69,13 @@ export default {
       }
     }
   },
+  redirect: {
+      login: '/',
+      home: '/'
+  },
   axios: {
-    baseURL: 'http://127.0.0.1:8000'
+    baseURL: 'http://django:8000',
+    browserBaseURL: 'http://localhost:8000'
   },
 }
 

@@ -12,6 +12,7 @@ class PageNumberSetPagination(pagination.PageNumberPagination):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
     search_fields = ['model', 'brand']
     filter_backends = (filters.SearchFilter,)
     serializer_class = ProductSerializer
@@ -46,11 +47,13 @@ class ProfileView(generics.GenericAPIView):
 
 
 class FeedbackView(generics.ListCreateAPIView):
+    permission_classes = [permissions.AllowAny]
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
 
 
 class ReviewsView(generics.ListCreateAPIView):
+    permission_classes = [permissions.AllowAny]
     queryset = Reviews.objects.all()
     serializer_class = ReviewsSerializer
 

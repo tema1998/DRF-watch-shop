@@ -15,8 +15,8 @@ SECRET_KEY = 'django-insecure-dr#&0ygxzj92tla32_cvb1ac56v$q4#t1pgak8jqq@q-(&1!^e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', 'django', '127.0.0.1']
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -50,7 +50,6 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=2),
 }
-CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000", "http://172.19.0.4:3000", "http://frontend_watch:3000"]
 
 # DRF settings
 REST_FRAMEWORK = {

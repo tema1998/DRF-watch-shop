@@ -1,20 +1,32 @@
 version: "2"
 
 services:
-  watch_project:
+  django:
     image: watch_project:latest
-    container_name: watch_project
+    container_name: django
     depends_on:
       - pgdb
+    expose:
+      - "8000"
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    networks:
+      - net
     command: >
-      bash -c "python3 manage.py runserver 0.0.0.0:8000"
-  frontend_watch:
+      bash -c "python manage.py runserver 0.0.0.0:8000"
+  nuxt:
     image: frontend_watch:latest
-    container_name: frontend_watch
+    container_name: nuxt
+    depends_on:
+      - django
+    expose:
+      - "3000"
     ports:
       - "3000:3000"
+    networks:
+      - net
     command: >
       bash -c "npm run dev"
   pgdb:
@@ -24,7 +36,24 @@ services:
       - pgdbdata:/var/lib/postgresql/data/
     env_file:
       - .env
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx:/etc/nginx/conf.d
+    depends_on:
+      - django
+      - nuxt
+    networks:
+      - net
+networks:
+  net:
+    name: net
+    external: true
+
 volumes:
   static_volume:
   media_volume:
   pgdbdata:
+
