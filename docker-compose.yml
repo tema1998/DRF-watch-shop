@@ -15,7 +15,7 @@ services:
     networks:
       - net
     command: >
-      bash -c "python manage.py runserver 0.0.0.0:8000"
+      bash -c "python3 manage.py migrate  && python3 manage.py runserver 0.0.0.0:8000"
   nuxt:
     image: frontend_watch:latest
     container_name: nuxt
@@ -36,6 +36,8 @@ services:
       - pgdbdata:/var/lib/postgresql/data/
     env_file:
       - .env
+    networks:
+      - net
   nginx:
     image: nginx:latest
     ports:
