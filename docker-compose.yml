@@ -15,7 +15,7 @@ services:
     networks:
       - net
     command: >
-      bash -c "python3 manage.py migrate  && python3 manage.py runserver 0.0.0.0:8000"
+      bash -c "python3 manage.py migrate  && gunicorn -b 0.0.0.0:8000 api.wsgi:application"
   nuxt:
     image: frontend_watch:latest
     container_name: nuxt
