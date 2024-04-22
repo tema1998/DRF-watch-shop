@@ -3,14 +3,18 @@ from .models import Product, Feedback, Reviews, Brand
 from django.contrib.auth.models import User
 
 
+from .services import validator_of_discount
+
+
 class ProductSerializer(serializers.ModelSerializer):
 
     author = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
     brand = serializers.SlugRelatedField(slug_field="name", queryset=Brand.objects.all())
+    discount = serializers.IntegerField(validators=[validator_of_discount])
 
     class Meta:
         model = Product
-        fields = ("id", "brand", "model", "slug", "description", "image", "created_at", "author", "price")
+        fields = ("id", "brand", "model", "slug", "description", "image", "created_at", "author", "price", "discount")
         lookup_field = 'slug'
         read_only_fields = ('id', 'slug', 'created_at')
         extra_kwargs = {
