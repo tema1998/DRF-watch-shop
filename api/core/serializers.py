@@ -1,16 +1,18 @@
 from rest_framework import serializers
-from .models import Product, Feedback, Reviews
+from .models import Product, Feedback, Reviews, Brand
 from django.contrib.auth.models import User
 
 
 class ProductSerializer(serializers.ModelSerializer):
 
     author = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
+    brand = serializers.SlugRelatedField(slug_field="name", queryset=Brand.objects.all())
 
     class Meta:
         model = Product
         fields = ("id", "brand", "model", "slug", "description", "image", "created_at", "author", "price")
         lookup_field = 'slug'
+        read_only_fields = ('id', 'slug', 'created_at')
         extra_kwargs = {
             'url': {'lookup_field': 'slug'}
         }
