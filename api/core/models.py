@@ -9,6 +9,9 @@ from django.utils.text import slugify
 from unidecode import unidecode
 
 
+from services import validator_of_discount
+
+
 class Country(models.Model):
     name = models.CharField(max_length=200)
 
@@ -34,6 +37,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    discount = models.IntegerField(validators=[validator_of_discount])
 
     def __str__(self):
         return self.model
@@ -43,7 +47,7 @@ class Product(models.Model):
         Add slug to model if it was not filled.
         """
         if not self.slug:
-            self.slug = slugify(unidecode(self.model))
+            self.slug = slugify(unidecode(str(self.model)))
         super().save(*args, **kwargs)
 
 
