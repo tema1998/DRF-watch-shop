@@ -12,6 +12,6 @@ WORKDIR /watch-shop
 COPY requirements.txt ./
 RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
-COPY . /watch-shop
+COPY api_old /watch-shop
 
 CMD ["python","manage.py","migrate"]
