@@ -10,7 +10,7 @@ from unidecode import unidecode
 class News(models.Model):
     slug = models.SlugField(unique=True)
     title = models.CharField(max_length=200)
-    text = RichTextUploadingField(blank=True)
+    text = RichTextUploadingField()
     image = models.ImageField()
     created_at = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
