@@ -9,6 +9,6 @@ router.register('news', NewsViewSet, basename='news')
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("like/<str:slug>/", LikeNews.as_view(), name="like"),
-    path("comments/<int:id>/", CommentsList.as_view(), name="comments"),
+    path("like/<int:pk>/", LikeNews.as_view(), name="like"),
+    path("comments/<int:pk>/", CommentsList.as_view(), name="comments"),
 ]

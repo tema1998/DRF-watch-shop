@@ -77,9 +77,9 @@ class LikeNews(APIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, slug):
+    def post(self, request, pk):
         user = request.user
-        news = get_object_or_404(News, slug=slug)
+        news = get_object_or_404(News, pk=pk)
 
         if user in news.likes.all():
             news.likes.remove(user)
@@ -102,8 +102,8 @@ class CommentsList(APIView):
 
     permission_classes = [permissions.AllowAny]
 
-    def get(self, request, id):
-        news = get_object_or_404(News, id=id)
+    def get(self, request, pk):
+        news = get_object_or_404(News, pk=pk)
         query = Comment.objects.filter(news=news)
         serializer = CommentListSerializer(query, many=True)
         return Response(
