@@ -24,10 +24,21 @@ class CommentListSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         return {
-            "name": obj.user.username
+            "username": obj.user.username
         }
 
     class Meta:
         model = Comment
         fields = '__all__'
+
+
+class CommentUpdateCreateSerializer(serializers.ModelSerializer):
+    news_id = serializers.IntegerField()
+
+    class Meta:
+        model = Comment
+        fields = [
+            "id", "news_id", "text", "user"
+        ]
+        read_only_fields = ("id", "user",)
 

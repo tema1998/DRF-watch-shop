@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import News, Comment
-from .serializers import NewsSerializer, CommentListSerializer
+from .serializers import NewsSerializer, CommentListSerializer, CommentUpdateCreateSerializer
 
 
 class PageNumberSetPagination(pagination.PageNumberPagination):
@@ -97,7 +97,7 @@ class CommentsList(APIView):
     """
     get:
         Returns the list of comments to News.
-        parameters = []
+        parameters = [news_id]
     """
 
     permission_classes = [permissions.AllowAny]
@@ -112,3 +112,31 @@ class CommentsList(APIView):
         )
 
 
+class CommentCreate(APIView):
+    """
+    post:
+        Create a comment instance to News. Returns created comment data.
+        parameters: [news_id, text]
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = CommentUpdateCreateSerializer(data=request.data)
+
+        if serializer.is_valid():
+            news = get_object_or_404(News, pk=serializer.data.get('news_id'))
+            comment = Comment.objects.create(
+                text=serializer.data.get('text'),
+                news=news,
+                user=request.user,
+            )
+            return Response(
+                CommentUpdateCreateSerializer(comment).data,
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
