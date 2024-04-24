@@ -9,7 +9,7 @@ class NewsSerializer(serializers.ModelSerializer):
         model = News
         fields = ("id", "title", "text", "slug", "image", "created_at", "author")
         lookup_field = 'slug'
-        read_only_fields = ('id', 'slug', 'created_at')
+        read_only_fields = ('id', 'slug', 'created_at', 'author')
         extra_kwargs = {
             'url': {'lookup_field': 'slug'}
         }

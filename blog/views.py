@@ -22,4 +22,13 @@ class NewsViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     pagination_class = PageNumberSetPagination
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
+    def perform_update(self, serializer, *args, **kwargs):
+        obj_author_username = News.objects.get(slug=self.kwargs['slug']).author
+
+        if self.request.user == obj_author_username:
+            serializer.save()
+        else:
+            raise serializers.ValidationError('Authentication error.')
