@@ -7,6 +7,9 @@ from .serializers import NewsSerializer
 
 
 class PageNumberSetPagination(pagination.PageNumberPagination):
+    """
+    Pagination settings for News.
+    """
     page_size = 3
     page_size_query_param = 'page_size'
     ordering = 'created_at'
@@ -45,11 +48,20 @@ class NewsViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer, *args, **kwargs):
         """
-        Check: only author can edit news..
+        Check: only author can edit news.
         """
         obj_author_username = News.objects.get(slug=self.kwargs['slug']).author
 
         if self.request.user == obj_author_username:
             serializer.save()
+        else:
+            raise serializers.ValidationError('Authentication error.')
+
+    def perform_destroy(self, instance):
+        """
+        Check: only author can delete news.
+        """
+        if self.request.user == instance.author:
+            instance.delete()
         else:
             raise serializers.ValidationError('Authentication error.')
