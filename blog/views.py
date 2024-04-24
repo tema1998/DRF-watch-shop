@@ -1,11 +1,11 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets, permissions, filters, pagination, serializers
+from rest_framework import viewsets, permissions, filters, pagination, serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import News
-from .serializers import NewsSerializer
+from .models import News, Comment
+from .serializers import NewsSerializer, CommentListSerializer
 
 
 class PageNumberSetPagination(pagination.PageNumberPagination):
@@ -91,3 +91,24 @@ class LikeNews(APIView):
              },
             status=200,
         )
+
+
+class CommentsList(APIView):
+    """
+    get:
+        Returns the list of comments to News.
+        parameters = []
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, id):
+        news = get_object_or_404(News, id=id)
+        query = Comment.objects.filter(news=news)
+        serializer = CommentListSerializer(query, many=True)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+        )
+
+

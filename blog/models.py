@@ -28,4 +28,8 @@ class News(models.Model):
         super().save(*args, **kwargs)
 
 
-
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_user', verbose_name='User')
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='comment_news', verbose_name='News')
+    text = models.TextField(verbose_name='Comment text')
+    created_at = models.DateTimeField(default=timezone.now)
