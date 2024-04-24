@@ -13,7 +13,22 @@ class PageNumberSetPagination(pagination.PageNumberPagination):
 
 
 class NewsViewSet(viewsets.ModelViewSet):
-
+    """
+    get:
+        Returns the list of news with pagination.
+    get:
+        Returns the list of news with pagination.
+        parameters = [slug]
+    put:
+        Updates an existing news. Returns updated news.
+        parameters = [slug] [title, text, image]
+    patch:
+        Updates an existing news. Returns updated news.
+        parameters = [slug] [title, text, image]
+    delete:
+        Delete an existing news.
+        parameters = [slug]
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     search_fields = ['title', 'text']
     filter_backends = (filters.SearchFilter,)
@@ -23,9 +38,15 @@ class NewsViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberSetPagination
 
     def perform_create(self, serializer):
+        """
+        Add author to serializer
+        """
         serializer.save(author=self.request.user)
 
     def perform_update(self, serializer, *args, **kwargs):
+        """
+        Check: only author can edit news..
+        """
         obj_author_username = News.objects.get(slug=self.kwargs['slug']).author
 
         if self.request.user == obj_author_username:
