@@ -14,6 +14,7 @@ class News(models.Model):
     image = models.ImageField()
     created_at = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, blank=True, related_name="news_like", verbose_name='Likes')
 
     def __str__(self):
         return self.title
@@ -25,3 +26,6 @@ class News(models.Model):
         if not self.slug:
             self.slug = slugify(unidecode(str(self.title)))
         super().save(*args, **kwargs)
+
+
+

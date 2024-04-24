@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, permissions, filters, pagination, serializers
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import News
 from .serializers import NewsSerializer
@@ -65,3 +67,27 @@ class NewsViewSet(viewsets.ModelViewSet):
             instance.delete()
         else:
             raise serializers.ValidationError('Authentication error.')
+
+
+class LikeNews(APIView):
+    """
+    post:
+        Like the news.
+        parameters = [slug]
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, slug):
+        user = request.user
+        news = get_object_or_404(News, slug=slug)
+
+        if user in news.likes.all():
+            news.likes.remove(user)
+        else:
+            news.likes.add(user)
+
+        return Response(
+            {"ok": "Your request was successful.",
+             },
+            status=200,
+        )
