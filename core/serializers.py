@@ -53,12 +53,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
-
     class Meta:
         model = Feedback
         fields = ("id", "user", "image", "review", "created_at")
         lookup_field = "id"
+        read_only_fields = ("id", "user", "created_at")
 
 
 class ReviewsSerializer(serializers.ModelSerializer):

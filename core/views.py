@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, pagination, filters, generics, mixins
+from rest_framework import viewsets, permissions, pagination, filters, generics, mixins, serializers
 from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer, ReviewsSerializer
 from .models import Product, Feedback, Reviews
 from rest_framework.response import Response
@@ -80,9 +80,23 @@ class ProfileView(generics.GenericAPIView):
 
 
 class FeedbackView(generics.ListCreateAPIView):
+    """
+    get:
+        Returns the list of feedbacks.
+    post:
+        Create feedback. Returns created feedback.
+        parameters = [review, image]
+    """
+
     permission_classes = [permissions.AllowAny]
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
+
+    def perform_create(self, serializer):
+        """
+        Add author to serializer
+        """
+        serializer.save(user=self.request.user)
 
 
 class ReviewsView(generics.ListCreateAPIView):
