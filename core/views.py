@@ -100,6 +100,14 @@ class FeedbackView(generics.ListCreateAPIView):
 
 
 class ReviewsView(generics.ListCreateAPIView):
+    """
+    get:
+        Returns the list of reviews to product by slug.
+        parameters = [slug]
+    post:
+        Create review. Returns created review.
+        parameters = [product_id, text]
+    """
     permission_classes = [permissions.AllowAny]
     queryset = Reviews.objects.all()
     serializer_class = ReviewsSerializer
@@ -108,3 +116,10 @@ class ReviewsView(generics.ListCreateAPIView):
         product_slug = self.kwargs['product_slug'].lower()
         product = Product.objects.get(slug=product_slug)
         return Reviews.objects.filter(product=product)
+
+    def perform_create(self, serializer):
+        """
+        Add author to serializer
+        """
+        serializer.save(user=self.request.user)
+

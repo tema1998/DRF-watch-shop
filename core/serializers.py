@@ -62,13 +62,11 @@ class FeedbackSerializer(serializers.ModelSerializer):
 
 class ReviewsSerializer(serializers.ModelSerializer):
 
-    username = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
-    product = serializers.SlugRelatedField(slug_field="slug", queryset=Product.objects.all())
-
     class Meta:
         model = Reviews
-        fields = ("id", "product", "username", "text", "created_date")
+        fields = ("id", "product", "user", "text", "created_at")
         lookup_field = 'id'
         extra_kwargs = {
             'url': {'lookup_field': 'id'}
         }
+        read_only_fields = ("id", "user", "created_at")

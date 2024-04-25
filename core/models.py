@@ -55,13 +55,13 @@ class Feedback(models.Model):
 
 
 class Reviews(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
-    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     text = models.TextField()
-    created_date = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['-created_date']
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.text
