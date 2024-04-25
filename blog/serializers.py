@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import News, Comment
-from django.contrib.auth.models import User
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -33,12 +32,11 @@ class CommentListSerializer(serializers.ModelSerializer):
 
 
 class CommentUpdateCreateSerializer(serializers.ModelSerializer):
-    news_id = serializers.IntegerField()
 
     class Meta:
         model = Comment
         fields = [
             "id", "news_id", "text", "user"
         ]
-        read_only_fields = ("id", "user",)
+        read_only_fields = ("id", "user", "news_id")
 
