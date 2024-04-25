@@ -22,8 +22,11 @@ class NewsViewSet(viewsets.ModelViewSet):
     get:
         Returns the list of news with pagination.
     get:
-        Returns the list of news with pagination.
+        Returns the news by slug.
         parameters = [slug]
+    post:
+        Create the news. Returns created news.
+        parameters = [slug] [title, text, image]
     put:
         Updates an existing news. Returns updated news.
         parameters = [slug] [title, text, image]

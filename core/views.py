@@ -6,12 +6,35 @@ from rest_framework.response import Response
 
 
 class PageNumberSetPagination(pagination.PageNumberPagination):
+    """
+    Pagination settings for Products.
+    """
     page_size = 3
     page_size_query_param = 'page_size'
     ordering = 'created_at'
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    """
+    get:
+        Returns the list of products with pagination.
+    get:
+        Returns the product by slug.
+        parameters = [slug]
+    post:
+        Create a product. Returns created product.
+        parameters = [slug] [brand, model, description, image, price, discount]
+    put:
+        Updates an existing product. Returns updated product.
+        parameters = [slug] [brand, model, description, image, price, discount]
+    patch:
+        Updates an existing product. Returns updated product.
+        parameters = [slug] [brand, model, description, image, price, discount]
+    delete:
+        Delete an existing product.
+        parameters = [slug]
+    """
+
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     search_fields = ['model', 'brand']
     filter_backends = (filters.SearchFilter,)
@@ -22,6 +45,12 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class RegisterView(generics.GenericAPIView):
+    """
+    post:
+        Create user account. Returns created account.
+        parameters = [username, password, password2]
+    """
+
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
 
@@ -36,6 +65,10 @@ class RegisterView(generics.GenericAPIView):
 
 
 class ProfileView(generics.GenericAPIView):
+    """
+    get:
+        Returns profile data of current user.
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserSerializer
 
