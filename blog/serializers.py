@@ -3,6 +3,10 @@ from .models import News, Comment
 
 
 class NewsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for News model.
+    """
+
     likes = serializers.SerializerMethodField(method_name='get_likes')
 
     def get_likes(self, obj):
@@ -19,9 +23,16 @@ class NewsSerializer(serializers.ModelSerializer):
 
 
 class CommentListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for list of comments.
+    """
+
     user = serializers.SerializerMethodField(method_name='get_user')
 
     def get_user(self, obj):
+        """
+        Method for getting username of user.
+        """
         return {
             "username": obj.user.username
         }
@@ -32,6 +43,9 @@ class CommentListSerializer(serializers.ModelSerializer):
 
 
 class CommentUpdateCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer to create and update comment model.
+    """
 
     class Meta:
         model = Comment
