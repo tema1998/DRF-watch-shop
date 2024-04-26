@@ -7,6 +7,9 @@ from .services import validator_of_discount
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    """
+    Serializer for product model.
+    """
 
     author = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
     brand = serializers.SlugRelatedField(slug_field="name", queryset=Brand.objects.all())
@@ -23,6 +26,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """
+    Serializer for registration of user.
+    """
+
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
@@ -35,6 +42,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
+        """
+        Method create user model if passwords are equals.
+        """
         username = validated_data['username']
         password = validated_data['password']
         password2 = validated_data['password2']
@@ -47,12 +57,18 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user model.
+    """
     class Meta:
         model = User
         exclude = ('password',)
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
+    """
+    Serializer for feedback model.
+    """
     class Meta:
         model = Feedback
         fields = ("id", "user", "image", "review", "created_at")
@@ -61,7 +77,9 @@ class FeedbackSerializer(serializers.ModelSerializer):
 
 
 class ReviewsSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer for review model.
+    """
     class Meta:
         model = Reviews
         fields = ("id", "product", "user", "text", "created_at")
