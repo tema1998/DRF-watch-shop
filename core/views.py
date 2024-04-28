@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, pagination, filters, generics, mixins, serializers
+
+from blog.permissions import IsStaffOrReadOnly
 from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer, ReviewsSerializer
 from .models import Product, Feedback, Reviews
 from rest_framework.response import Response
@@ -35,7 +37,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         parameters = [slug]
     """
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStaffOrReadOnly]
     search_fields = ['model', 'brand']
     filter_backends = (filters.SearchFilter,)
     serializer_class = ProductSerializer
