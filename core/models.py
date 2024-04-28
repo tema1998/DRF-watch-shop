@@ -45,18 +45,67 @@ class Product(models.Model):
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Date of creation")
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Price, $")
+    is_available = models.BooleanField(default=True, verbose_name="Availability")
+    quantity = models.PositiveIntegerField(verbose_name="Quantity")
     discount = models.IntegerField(default=0, verbose_name="Discount, %")
 
     def __str__(self):
         return self.model
 
+    @property
+    def price_with_discount(self):
+        price_with_discount = self.price * (100-self.discount)/100
+        return price_with_discount
+
     def save(self, *args, **kwargs):
         """
         Add slug to model if it was not filled.
+        Check availability: if quantity<1 then is_available=False.
         """
         if not self.slug:
             self.slug = slugify(unidecode(str(self.model)))
+        if self.quantity == 0:
+            self.is_available = False
+
         super().save(*args, **kwargs)
+
+
+class Order(models.Model):
+    """
+    Model for the orders of user.
+    """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
+    is_ordered = models.BooleanField(default=False, verbose_name="Is ordered")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date of creation")
+
+    def __str__(self):
+        return f"Order #{self.id}"
+
+    @property
+    def order_price(self):
+        order_price = 0
+        for order in self.orderitems.all():
+            order_price += order.price_with_discount
+        return order_price
+
+
+class OrderItem(models.Model):
+    """
+    Model for items of order.
+    """
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Product")
+    quantity = models.PositiveIntegerField(default=1, verbose_name="Quantity")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,related_name="orderitems", verbose_name="Order")
+
+    @property
+    def total_price(self):
+        return self.product.price_with_discount * self.quantity
+
+    def __str__(self):
+        return f"{self.user}'s orderitem"
 
 
 class Feedback(models.Model):
