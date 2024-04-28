@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import News, Comment
+from .permissions import IsStaffOrReadOnly, IsStaffOrOwner
 from .serializers import NewsSerializer, CommentListSerializer, CommentUpdateCreateSerializer
 
 
@@ -37,7 +38,7 @@ class NewsViewSet(viewsets.ModelViewSet):
         Delete an existing news.
         parameters = [slug]
     """
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStaffOrReadOnly]
     search_fields = ['title', 'text']
     filter_backends = (filters.SearchFilter,)
     serializer_class = NewsSerializer
@@ -50,26 +51,6 @@ class NewsViewSet(viewsets.ModelViewSet):
         Add author to serializer
         """
         serializer.save(author=self.request.user)
-
-    def perform_update(self, serializer, *args, **kwargs):
-        """
-        Check: only author can edit news.
-        """
-        obj_author_username = News.objects.get(slug=self.kwargs['slug']).author
-
-        if self.request.user == obj_author_username:
-            serializer.save()
-        else:
-            raise serializers.ValidationError('Authentication error.')
-
-    def perform_destroy(self, instance):
-        """
-        Check: only author can delete news.
-        """
-        if self.request.user == instance.author:
-            instance.delete()
-        else:
-            raise serializers.ValidationError('Authentication error.')
 
 
 class LikeNews(APIView):
@@ -122,7 +103,7 @@ class CommentCreate(APIView):
         parameters: [news_id, text]
     """
 
-    permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         serializer = CommentUpdateCreateSerializer(data=request.data)
@@ -158,10 +139,11 @@ class CommentUpdateDelete(APIView):
         parameters: [pk]
     """
 
-    permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [IsStaffOrOwner]
 
     def put(self, request, pk):
-        comment = get_object_or_404(Comment, pk=pk, user=request.user)
+        comment = get_object_or_404(Comment, pk=pk)
+        self.check_object_permissions(request, comment)
         serializer = CommentUpdateCreateSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -176,6 +158,6 @@ class CommentUpdateDelete(APIView):
             )
 
     def delete(self, request, pk):
-        comment = get_object_or_404(Comment, pk=pk, user=request.user)
+        comment = get_object_or_404(Comment, pk=pk)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

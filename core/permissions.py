@@ -11,12 +11,3 @@ class IsStaffOrReadOnly(BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.method in SAFE_METHODS or request.user and request.user.is_staff)
-
-
-class IsStaffOrOwner(BasePermission):
-    """
-    Allows access only to admin users, or to owner.
-    """
-
-    def has_object_permission(self, request, view, obj):
-        return bool(request.user and (request.user.is_staff or obj.user == request.user))
