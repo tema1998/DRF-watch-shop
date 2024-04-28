@@ -1,0 +1,801 @@
+swagger: '2.0'
+info:
+  title: Watch-shop API
+  description: Watch-shop
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: artemvol1998@gmail.com
+  license:
+    name: tema1998
+  version: v1
+host: 127.0.0.1:8000
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /blog/comments/create/:
+    post:
+      operationId: blog_comments_create_create
+      description: |-
+        Create a comment instance to News. Returns created comment data.
+            parameters: [news_id, text]
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - blog
+    parameters: []
+  /blog/comments/update-delete/{id}/:
+    put:
+      operationId: blog_comments_update-delete_update
+      summary: Update an existing comment. Returns updated comment data.
+      description: 'parameters: [pk, text]'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - blog
+    delete:
+      operationId: blog_comments_update-delete_delete
+      summary: Delete an existing comment.
+      description: 'parameters: [pk]'
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - blog
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /blog/comments/{id}/:
+    get:
+      operationId: blog_comments_read
+      description: |-
+        Returns the list of comments to News.
+            parameters = [news_id]
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - blog
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /blog/like/{id}/:
+    post:
+      operationId: blog_like_create
+      description: |-
+        Like the news.
+            parameters = [slug]
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - blog
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /blog/news/:
+    get:
+      operationId: blog_news_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/News'
+      tags:
+      - blog
+    post:
+      operationId: blog_news_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - blog
+    parameters: []
+  /blog/news/{slug}/:
+    get:
+      operationId: blog_news_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - blog
+    put:
+      operationId: blog_news_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - blog
+    patch:
+      operationId: blog_news_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/News'
+      tags:
+      - blog
+    delete:
+      operationId: blog_news_delete
+      description: |-
+        Delete an existing news.
+            parameters = [slug]
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - blog
+    parameters:
+    - name: slug
+      in: path
+      required: true
+      type: string
+      format: slug
+      pattern: ^[-a-zA-Z0-9_]+$
+  /core/feedback/:
+    get:
+      operationId: core_feedback_list
+      description: Returns the list of feedbacks.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Feedback'
+      tags:
+      - core
+    post:
+      operationId: core_feedback_create
+      description: |-
+        Create feedback. Returns created feedback.
+            parameters = [review, image]
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Feedback'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Feedback'
+      tags:
+      - core
+    parameters: []
+  /core/products/:
+    get:
+      operationId: core_products_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Product'
+      tags:
+      - core
+    post:
+      operationId: core_products_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Product'
+      tags:
+      - core
+    parameters: []
+  /core/products/{slug}/:
+    get:
+      operationId: core_products_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Product'
+      tags:
+      - core
+    put:
+      operationId: core_products_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Product'
+      tags:
+      - core
+    patch:
+      operationId: core_products_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Product'
+      tags:
+      - core
+    delete:
+      operationId: core_products_delete
+      description: |-
+        Delete an existing product.
+            parameters = [slug]
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - core
+    parameters:
+    - name: slug
+      in: path
+      required: true
+      type: string
+      format: slug
+      pattern: ^[-a-zA-Z0-9_]+$
+  /core/profile/:
+    get:
+      operationId: core_profile_list
+      description: Returns profile data of current user.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+      tags:
+      - core
+    parameters: []
+  /core/register/:
+    post:
+      operationId: core_register_create
+      description: |-
+        Create user account. Returns created account.
+            parameters = [username, password, password2]
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Register'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Register'
+      tags:
+      - core
+    parameters: []
+  /core/reviews/:
+    get:
+      operationId: core_reviews_list
+      description: |-
+        Returns the list of reviews to product by slug.
+            parameters = [slug]
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Reviews'
+      tags:
+      - core
+    post:
+      operationId: core_reviews_create
+      description: |-
+        Create review. Returns created review.
+            parameters = [product_id, text]
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Reviews'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Reviews'
+      tags:
+      - core
+    parameters: []
+  /core/reviews/{product_slug}/:
+    get:
+      operationId: core_reviews_read
+      description: |-
+        Returns the list of reviews to product by slug.
+            parameters = [slug]
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Reviews'
+      tags:
+      - core
+    post:
+      operationId: core_reviews_create
+      description: |-
+        Create review. Returns created review.
+            parameters = [product_id, text]
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Reviews'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Reviews'
+      tags:
+      - core
+    parameters:
+    - name: product_slug
+      in: path
+      required: true
+      type: string
+  /refresh_token/:
+    post:
+      operationId: refresh_token_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenRefresh'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      tags:
+      - refresh_token
+    parameters: []
+  /token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenObtainPair'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenObtainPair'
+      tags:
+      - token
+    parameters: []
+definitions:
+  News:
+    required:
+    - title
+    - text
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      title:
+        title: Title
+        type: string
+        maxLength: 200
+        minLength: 1
+      text:
+        title: News text
+        type: string
+        minLength: 1
+      slug:
+        title: Slug
+        type: string
+        format: slug
+        pattern: ^[-a-zA-Z0-9_]+$
+        readOnly: true
+        minLength: 1
+      image:
+        title: Image
+        type: string
+        readOnly: true
+        format: uri
+      created_at:
+        title: Date of creation
+        type: string
+        format: date-time
+        readOnly: true
+      author:
+        title: Author
+        type: integer
+        readOnly: true
+      likes:
+        title: Likes
+        type: string
+        readOnly: true
+  Feedback:
+    required:
+    - review
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      user:
+        title: User
+        type: integer
+        readOnly: true
+      image:
+        title: Image
+        type: string
+        readOnly: true
+        format: uri
+      review:
+        title: Review
+        type: string
+        maxLength: 1000
+        minLength: 1
+      created_at:
+        title: Date of creation
+        type: string
+        format: date-time
+        readOnly: true
+  Product:
+    required:
+    - brand
+    - model
+    - description
+    - author
+    - price
+    - discount
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      brand:
+        title: Brand
+        type: string
+      model:
+        title: Model
+        type: string
+        maxLength: 200
+        minLength: 1
+      slug:
+        title: Slug
+        type: string
+        format: slug
+        pattern: ^[-a-zA-Z0-9_]+$
+        readOnly: true
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        minLength: 1
+      image:
+        title: Image
+        type: string
+        readOnly: true
+        format: uri
+      created_at:
+        title: Date of creation
+        type: string
+        format: date-time
+        readOnly: true
+      author:
+        title: Author
+        type: string
+        pattern: ^[\w.@+-]+$
+      price:
+        title: Price, $
+        type: string
+        format: decimal
+      discount:
+        title: Discount
+        type: integer
+  User:
+    required:
+    - username
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      last_login:
+        title: Last login
+        type: string
+        format: date-time
+        x-nullable: true
+      is_superuser:
+        title: Superuser status
+        description: Designates that this user has all permissions without explicitly
+          assigning them.
+        type: boolean
+      username:
+        title: Username
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      first_name:
+        title: First name
+        type: string
+        maxLength: 150
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 150
+      email:
+        title: Email address
+        type: string
+        format: email
+        maxLength: 254
+      is_staff:
+        title: Staff status
+        description: Designates whether the user can log into this admin site.
+        type: boolean
+      is_active:
+        title: Active
+        description: Designates whether this user should be treated as active. Unselect
+          this instead of deleting accounts.
+        type: boolean
+      date_joined:
+        title: Date joined
+        type: string
+        format: date-time
+      groups:
+        description: The groups this user belongs to. A user will get all permissions
+          granted to each of their groups.
+        type: array
+        items:
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+          type: integer
+        uniqueItems: true
+      user_permissions:
+        description: Specific permissions for this user.
+        type: array
+        items:
+          description: Specific permissions for this user.
+          type: integer
+        uniqueItems: true
+  Register:
+    required:
+    - username
+    - password
+    - password2
+    type: object
+    properties:
+      username:
+        title: Username
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        maxLength: 128
+        minLength: 1
+      password2:
+        title: Password2
+        type: string
+        minLength: 1
+  Reviews:
+    required:
+    - product
+    - text
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      product:
+        title: Product
+        type: integer
+      user:
+        title: User
+        type: integer
+        readOnly: true
+      text:
+        title: Text
+        type: string
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+  TokenRefresh:
+    required:
+    - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+  TokenObtainPair:
+    required:
+    - username
+    - password
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
