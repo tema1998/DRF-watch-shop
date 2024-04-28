@@ -9,27 +9,24 @@
 * ![PostgreSQL][PostgreSQL]
 * ![NuxtJS][NuxtJS]
 
+## Features
+* Get token using simple-jwt after authentication.
+* Products
+* Review to product
+* Feedback to shop
+* News blog
+* Like news
+* Comment news
 
-## Structure
-Backend(DRF) contains the following endpoints:
+## Endopints
+To get information about endoints, open the [endoints.yaml](https://github.com/tema1998/DRF-watch-shop/blob/master/endpoints.yaml).
 
-Endpoint |HTTP Method | CRUD Method | Result
--- | -- |-- |--
-`api/products/` | GET | READ | Get all products(with pagination)
-`api/products/slug/` | GET | READ | Get product by slug
-`api/products/?search=key` | GET | READ | Find products by key(with pagination)
-`api/profile/` | GET | READ | Get info about user profile
-`api/reviews/slug/` | GET | READ | Get reviews for product by product slug
-`api/reviews/`| POST | CREATE | Create a review
-`api/feedback/`| POST | CREATE | Write feedback to admin email
-`api/register/`| POST | CREATE | Register
-`api/token/`| POST | CREATE | Get "refresh" and "access" tokens
-`api/refresh_token/`| POST | CREATE | Get new "access" token (refresh)
-`New functions will be added later.`|  |  | 
+Or use the next links:
 
+[http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
 
+[http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
 
-Functions 'Follow/unfollow', 'Like/dislike', 'Add posts to favorites' implemented using **JS**(*without page refresh*).
 
 ## Config file
 Create .env, set your data.
