@@ -91,6 +91,9 @@ class ReviewsSerializer(serializers.ModelSerializer):
 
 
 class OrderProductSerializer(serializers.ModelSerializer):
+    """
+    Serializer for OrderProduct model.
+    """
     product = serializers.SerializerMethodField()
 
     class Meta:
@@ -98,10 +101,18 @@ class OrderProductSerializer(serializers.ModelSerializer):
         fields = ["product", "quantity", "total_price"]
 
     def get_product(self,obj):
+        """
+        Method to get the model of product and to display it instead of ID.
+        """
         return obj.product.model
 
 
 class CartSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Order model.
+    'Ordered_products' - used for getting products from Order via related_name,
+    for these products using OrderProductSerializer.
+    """
     ordered_products = OrderProductSerializer(many=True)
     user = serializers.StringRelatedField()
 
@@ -111,7 +122,13 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class AddProductToCartSerializer(serializers.ModelSerializer):
+    """
+    Serializer for adding product to Order.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Get user field from request.
+        """
         super().__init__(*args, **kwargs)
         self.fields["user"].default = serializers.CurrentUserDefault()
         self.fields["user"].required = False
@@ -121,11 +138,19 @@ class AddProductToCartSerializer(serializers.ModelSerializer):
         fields = ["product", "user"]
 
     def validate_product(self, value):
+        """
+        Check quantity of product.
+        """
         if not value.is_available:
             raise serializers.ValidationError("Product is out of stuck.")
         return value
 
     def create(self, validated_data):
+        """
+        If user doesn't have Order - create.
+        If user first tima add a product to cart - create ordered_product.
+        If user already has ordered_product - increase quantity of this product.
+        """
         user = validated_data["user"]
         product = validated_data["product"]
         order, created = Order.objects.get_or_create(
@@ -148,6 +173,9 @@ class AddProductToCartSerializer(serializers.ModelSerializer):
 
 
 class RemoveProductFromCartSerializer(serializers.ModelSerializer):
+    """
+    Serializer for removing product from Order.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -159,12 +187,19 @@ class RemoveProductFromCartSerializer(serializers.ModelSerializer):
         fields = ["product", "user"]
 
     def validate(self, data):
+        """
+        Check if product in the cart of user, if not - raise exception.
+        """
         ordered_product = OrderProduct.objects.filter(user=data["user"], product=data["product"])
         if not ordered_product:
             raise serializers.ValidationError("The product isn't in your cart.")
         return data
 
     def save(self):
+        """
+        If quantity of product in the cart equals 1, then delete order_product,
+        if more than 1, then decrease by one.
+        """
         user = self.validated_data["user"]
         product = self.validated_data["product"]
         ordered_product = OrderProduct.objects.get(user=user, product=product)
