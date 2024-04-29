@@ -85,12 +85,12 @@ class Order(models.Model):
     @property
     def order_price(self):
         order_price = 0
-        for order in self.orderitems.all():
+        for order in self.ordered_products.all():
             order_price += order.price_with_discount
         return order_price
 
 
-class OrderItem(models.Model):
+class OrderProduct(models.Model):
     """
     Model for items of order.
     """
@@ -98,14 +98,14 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Product")
     quantity = models.PositiveIntegerField(default=1, verbose_name="Quantity")
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orderitems", verbose_name="Order")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="ordered_products", verbose_name="Order")
 
     @property
     def total_price(self):
         return self.product.price_with_discount * self.quantity
 
     def __str__(self):
-        return f"{self.user}'s orderitem"
+        return f"{self.user}'s ordered product"
 
 
 class Feedback(models.Model):

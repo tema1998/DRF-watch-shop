@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Feedback, Reviews, Brand, OrderItem, Order
+from .models import Product, Feedback, Reviews, Brand, OrderProduct, Order
 from django.contrib.auth.models import User
 
 
@@ -90,24 +90,24 @@ class ReviewsSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "user", "created_at")
 
 
-class OrderItemSerializer(serializers.ModelSerializer):
+class OrderProductSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
 
     class Meta:
-        model = OrderItem
-        fields = ["product", "quantity", "price_with_discount"]
+        model = OrderProduct
+        fields = ["product", "quantity", "total_price"]
 
     def get_product(self,obj):
         return obj.product.model
 
 
 class CartSerializer(serializers.ModelSerializer):
-    orderitems = OrderItemSerializer(many=True)
+    ordered_products = OrderProductSerializer(many=True)
     user = serializers.StringRelatedField()
 
     class Meta:
         model = Order
-        fields = ["user", "orderitems", "is_ordered", "order_price", "created_at"]
+        fields = ["user", "ordered_products", "is_ordered", "order_price", "created_at"]
 
 
 class AddProductToCartSerializer(serializers.ModelSerializer):
@@ -117,7 +117,7 @@ class AddProductToCartSerializer(serializers.ModelSerializer):
         self.fields["user"].required = False
 
     class Meta:
-        model = OrderItem
+        model = OrderProduct
         fields = ["product", "user"]
 
     def validate_product(self, value):
@@ -132,17 +132,46 @@ class AddProductToCartSerializer(serializers.ModelSerializer):
             user=user,
             is_ordered=False,
         )
-        orderitem, created = OrderItem.objects.get_or_create(
+        ordered_product, created = OrderProduct.objects.get_or_create(
             user=user,
             product=product,
             order=order,
         )
         if created:
-            orderitem.order = order
-            orderitem.save()
-            return orderitem
+            ordered_product.order = order
+            ordered_product.save()
+            return ordered_product
         else:
-            orderitem.quantity += 1
-            orderitem.save()
-            return orderitem
+            ordered_product.quantity += 1
+            ordered_product.save()
+            return ordered_product
 
+
+class RemoveProductFromCartSerializer(serializers.ModelSerializer):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["user"].default = serializers.CurrentUserDefault()
+        self.fields["user"].required = False
+
+    class Meta:
+        model = OrderProduct
+        fields = ["product", "user"]
+
+    def validate(self, data):
+        ordered_product = OrderProduct.objects.filter(user=data["user"], product=data["product"])
+        if not ordered_product:
+            raise serializers.ValidationError("The product isn't in your cart.")
+        return data
+
+    def save(self):
+        user = self.validated_data["user"]
+        product = self.validated_data["product"]
+        ordered_product = OrderProduct.objects.get(user=user, product=product)
+        if ordered_product.quantity == 1:
+            ordered_product.delete()
+            return "The product was successfully removed from your cart."
+        else:
+            ordered_product.quantity -= 1
+            ordered_product.save()
+            return "The quantity of product in the your cart was successfully decreased."

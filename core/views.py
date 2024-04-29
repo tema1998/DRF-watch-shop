@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from .permissions import IsStaffOrReadOnly
 from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer, ReviewsSerializer, \
-    CartSerializer, AddProductToCartSerializer
+    CartSerializer, AddProductToCartSerializer, RemoveProductFromCartSerializer
 from .models import Product, Feedback, Reviews, Order
 from rest_framework.response import Response
 
@@ -146,9 +146,20 @@ class AddProductToCart(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
-        return Response("Successfully added to cart.", status=status.HTTP_201_CREATED)
+        return Response("The product was successfully added to cart.", status=status.HTTP_201_CREATED)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["request"] = self.request
         return context
+
+
+class RemoveProductFromCart(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = RemoveProductFromCartSerializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        response_message = serializer.save()
+        return Response(response_message)
+
