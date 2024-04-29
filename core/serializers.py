@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Feedback, Reviews, Brand
+from .models import Product, Feedback, Reviews, Brand, OrderItem, Order
 from django.contrib.auth.models import User
 
 
@@ -88,3 +88,61 @@ class ReviewsSerializer(serializers.ModelSerializer):
             'url': {'lookup_field': 'id'}
         }
         read_only_fields = ("id", "user", "created_at")
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrderItem
+        fields = ["product", "quantity", "price_with_discount"]
+
+    def get_product(self,obj):
+        return obj.product.model
+
+
+class CartSerializer(serializers.ModelSerializer):
+    orderitems = OrderItemSerializer(many=True)
+    user = serializers.StringRelatedField()
+
+    class Meta:
+        model = Order
+        fields = ["user", "orderitems", "is_ordered", "order_price", "created_at"]
+
+
+class AddProductToCartSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["user"].default = serializers.CurrentUserDefault()
+        self.fields["user"].required = False
+
+    class Meta:
+        model = OrderItem
+        fields = ["product", "user"]
+
+    def validate_product(self, value):
+        if not value.is_available:
+            raise serializers.ValidationError("Product is out of stuck.")
+        return value
+
+    def create(self, validated_data):
+        user = validated_data["user"]
+        product = validated_data["product"]
+        order, created = Order.objects.get_or_create(
+            user=user,
+            is_ordered=False,
+        )
+        orderitem, created = OrderItem.objects.get_or_create(
+            user=user,
+            product=product,
+            order=order,
+        )
+        if created:
+            orderitem.order = order
+            orderitem.save()
+            return orderitem
+        else:
+            orderitem.quantity += 1
+            orderitem.save()
+            return orderitem
+

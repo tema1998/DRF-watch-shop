@@ -1,9 +1,12 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, pagination, filters, generics, mixins, serializers
+from django.views.generic.base import ContextMixin
+from rest_framework import viewsets, permissions, pagination, filters, generics, mixins, serializers, status
+from rest_framework.views import APIView
 
 from .permissions import IsStaffOrReadOnly
-from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer, ReviewsSerializer
-from .models import Product, Feedback, Reviews
+from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, FeedbackSerializer, ReviewsSerializer, \
+    CartSerializer, AddProductToCartSerializer
+from .models import Product, Feedback, Reviews, Order
 from rest_framework.response import Response
 
 
@@ -125,3 +128,27 @@ class ReviewsView(generics.ListCreateAPIView):
         """
         serializer.save(user=self.request.user)
 
+
+class Cart(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        queryset = Order.objects.filter(user=request.user, is_ordered=False)
+        if queryset:
+            serializer = CartSerializer(queryset[0])
+            return Response(serializer.data)
+        return Response("your cart is empty", status=status.HTTP_403_FORBIDDEN)
+
+
+class AddProductToCart(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = AddProductToCartSerializer
+
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response("Successfully added to cart.", status=status.HTTP_201_CREATED)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["request"] = self.request
+        return context

@@ -98,7 +98,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Product")
     quantity = models.PositiveIntegerField(default=1, verbose_name="Quantity")
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
-    order = models.ForeignKey(Order, on_delete=models.CASCADE,related_name="orderitems", verbose_name="Order")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orderitems", verbose_name="Order")
 
     @property
     def total_price(self):
