@@ -3,7 +3,7 @@ from .models import Product, Feedback, Reviews, Brand, OrderProduct, Order
 from django.contrib.auth.models import User
 
 
-from .services import validator_of_discount
+from .services.validators import validator_of_discount
 
 
 class ProductSerializer(serializers.ModelSerializer):
