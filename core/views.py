@@ -130,6 +130,11 @@ class ReviewsView(generics.ListCreateAPIView):
 
 
 class Cart(APIView):
+    """
+    get:
+    Get product from the cart of current user.
+    """
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -141,6 +146,12 @@ class Cart(APIView):
 
 
 class AddProductToCart(generics.CreateAPIView):
+    """
+    post:
+    Add product to cart of current user.
+    parameters = [product_id]
+    """
+
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = AddProductToCartSerializer
 
@@ -155,6 +166,12 @@ class AddProductToCart(generics.CreateAPIView):
 
 
 class RemoveProductFromCart(APIView):
+    """
+    post:
+    Remove product from cart of current user.
+    parameters = [product_id]
+    """
+
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
