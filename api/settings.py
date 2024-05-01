@@ -28,12 +28,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     # project apps
     'core',
     'payment',
     'blog',
     # third party apps
+    'rest_framework',
     'ckeditor',
     'ckeditor_uploader',
     'drf_yasg',

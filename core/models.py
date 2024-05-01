@@ -70,6 +70,13 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
 
+class PaymentProcess(models.Model):
+    payment_id = models.CharField(max_length=255, verbose_name="ID of created payment")
+    payment_url = models.CharField(max_length=255, verbose_name="URL of created payment")
+    status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date of creation")
+
+
 class Order(models.Model):
     """
     Model for the orders of user.
@@ -77,7 +84,8 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
     is_ordered = models.BooleanField(default=False, verbose_name="Is ordered")
-    payment_id = models.CharField(max_length=255, default=0)
+    payment_process = models.ForeignKey(PaymentProcess, null=True, on_delete=models.SET_NULL, related_name="order", verbose_name='Payment',
+                                blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date of creation")
 
     def __str__(self):

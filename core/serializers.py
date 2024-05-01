@@ -153,6 +153,7 @@ class AddProductToCartSerializer(serializers.ModelSerializer):
         """
         user = validated_data["user"]
         product = validated_data["product"]
+
         order, created = Order.objects.get_or_create(
             user=user,
             is_ordered=False,
@@ -162,9 +163,11 @@ class AddProductToCartSerializer(serializers.ModelSerializer):
             product=product,
             order=order,
         )
+
+        if order.payment_process:
+            raise serializers.ValidationError("Order in process of payment. Wait about 10 minutes to automatically "
+                                              "cancel order or cansel it.")
         if created:
-            ordered_product.order = order
-            ordered_product.save()
             return ordered_product
         else:
             ordered_product.quantity += 1
