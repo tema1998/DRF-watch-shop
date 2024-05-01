@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from yookassa import Payment, Configuration
 import uuid
 
@@ -41,22 +42,18 @@ def create_payment(serialized_data):
 
 
 def payment_acceptance(response):
-    # try:
-    #     table = BalanceChange.objects.get(
-    #         id=response['object']['metadata']['table_id'],
-    #     )
-    # except ObjectDoesNotExist:
-    #     payment_id = response['object']['id']
-    #     rollbar.report_message(
-    #         f"Can't get table for payment id {payment_id}",
-    #         'warning',
-    #     )
-    #     return False
+    try:
+        order = Order.objects.get(
+            id=response['object']['metadata']['order_id'],
+            user=response['object']['metadata']['user_id']
+        )
+    except ObjectDoesNotExist:
+        print(f"Payment error of order #{response['object']['metadata']['order_id']}")
+        return False
 
     if response['event'] == 'payment.succeeded':
-        print('SUCCEED')
+        order.is_ordered = True
+        order.save()
     elif response['event'] == 'payment.canceled':
-        print('CANCEL')
-    elif response['event'] == 'payment.waiting_for_capture':
-        print('waiting_for_capture')
+        pass
     return True
