@@ -77,6 +77,7 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
     is_ordered = models.BooleanField(default=False, verbose_name="Is ordered")
+    payment_id = models.CharField(max_length=255, default=0)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date of creation")
 
     def __str__(self):

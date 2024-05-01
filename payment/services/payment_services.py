@@ -36,7 +36,8 @@ def create_payment(serialized_data):
         'refundable': False,
         'description': 'Order #' + str(order.id),
     }, idempotence_key)
-
+    order.payment_id = payment.id
+    order.save()
     confirmation_url = payment.confirmation.confirmation_url
     return confirmation_url
 
@@ -45,7 +46,8 @@ def payment_acceptance(response):
     try:
         order = Order.objects.get(
             id=response['object']['metadata']['order_id'],
-            user=response['object']['metadata']['user_id']
+            user=response['object']['metadata']['user_id'],
+            payment_id=response['object']['id'],
         )
     except ObjectDoesNotExist:
         print(f"Payment error of order #{response['object']['metadata']['order_id']}")

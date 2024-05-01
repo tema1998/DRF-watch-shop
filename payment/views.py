@@ -20,7 +20,7 @@ class CreatePaymentView(CreateAPIView):
         if serializer.is_valid():
             serialized_data = serializer.validated_data
         else:
-            return Response(400)
+            return Response(serializer.errors)
         confirmation_url = create_payment(serialized_data)
         return Response({'confirmation_url': confirmation_url})
 
@@ -30,7 +30,6 @@ class AcceptPaymentView(CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         response = json.loads(request.body)
-        print(response)
 
         if payment_acceptance(response):
             return Response(200)
