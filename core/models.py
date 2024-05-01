@@ -86,7 +86,7 @@ class Order(models.Model):
     def order_price(self):
         order_price = 0
         for order in self.ordered_products.all():
-            order_price += order.price_with_discount
+            order_price += order.total_price
         return order_price
 
 

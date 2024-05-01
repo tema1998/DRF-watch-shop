@@ -1,15 +1,23 @@
 from yookassa import Payment, Configuration
 import uuid
 
+from core.models import Order
+
 Configuration.account_id = '378591'
 Configuration.secret_key = 'test_3LvWNqOjroU0MFy57p03e01ECXGsyAKhWn1vB9lsxYU'
 
 
-def create_payment():
+def create_payment(serialized_data):
+    user = serialized_data['user']
+    order = Order.objects.get(
+            user=user,
+            is_ordered=False,
+        )
+    return_url = serialized_data.get('return_url')
     idempotence_key = str(uuid.uuid4())
     payment = Payment.create({
         "amount": {
-          "value": "2.00",
+          "value": order.order_price,
           "currency": "RUB"
         },
         "payment_method_data": {
@@ -17,13 +25,18 @@ def create_payment():
         },
         "confirmation": {
           "type": "redirect",
-          "return_url": "https://www.example.com/return_url"
+          "return_url": return_url
         },
-        "description": "Заказ №72"
+        'metadata': {
+            'order_id': order.id,
+            'user_id': user.id,
+        },
+        'capture': True,
+        'refundable': False,
+        'description': 'Order #' + str(order.id),
     }, idempotence_key)
 
     confirmation_url = payment.confirmation.confirmation_url
-
     return confirmation_url
 
 
