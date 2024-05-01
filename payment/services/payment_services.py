@@ -27,4 +27,23 @@ def create_payment():
     return confirmation_url
 
 
+def payment_acceptance(response):
+    # try:
+    #     table = BalanceChange.objects.get(
+    #         id=response['object']['metadata']['table_id'],
+    #     )
+    # except ObjectDoesNotExist:
+    #     payment_id = response['object']['id']
+    #     rollbar.report_message(
+    #         f"Can't get table for payment id {payment_id}",
+    #         'warning',
+    #     )
+    #     return False
 
+    if response['event'] == 'payment.succeeded':
+        print('SUCCEED')
+    elif response['event'] == 'payment.canceled':
+        print('CANCEL')
+    elif response['event'] == 'payment.waiting_for_capture':
+        print('waiting_for_capture')
+    return True
