@@ -1,11 +1,13 @@
+import os
+
 from django.core.exceptions import ObjectDoesNotExist
 from yookassa import Payment, Configuration
 import uuid
 
 from core.models import Order
 
-Configuration.account_id = '378591'
-Configuration.secret_key = 'test_3LvWNqOjroU0MFy57p03e01ECXGsyAKhWn1vB9lsxYU'
+Configuration.account_id = os.getenv('YOOKASSA_ACCOUNT_ID', '378591')
+Configuration.secret_key = os.getenv('YOOKASSA_SECRET_KEY', 'test_3LvWNqOjroU0MFy57p03e01ECXGsyAKhWn1vB9lsxYU')
 
 
 def create_payment(serialized_data):
