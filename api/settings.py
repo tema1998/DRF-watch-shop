@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-dr#&0ygxzj92tla32_cvb1ac56v$q4#t1pgak8jqq@q-(&1!^e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'django', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', 'django', '127.0.0.1', 'cae9-37-214-39-253.ngrok-free.app']
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
@@ -28,8 +28,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    # project apps
     'core',
+    'payment',
     'blog',
+    # third party apps
     'ckeditor',
     'ckeditor_uploader',
     'drf_yasg',

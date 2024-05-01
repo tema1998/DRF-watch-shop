@@ -9,8 +9,6 @@ from .serializers import ProductSerializer, RegisterSerializer, UserSerializer, 
 from .models import Product, Feedback, Reviews, Order
 from rest_framework.response import Response
 
-from .services.payment import create_payment
-
 
 class PageNumberSetPagination(pagination.PageNumberPagination):
     """
@@ -183,10 +181,3 @@ class RemoveProductFromCart(APIView):
         return Response(response_message)
 
 
-class CreatePaymentView(APIView):
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        confirmation_url = create_payment()
-        return Response({'confirmation_url': confirmation_url})

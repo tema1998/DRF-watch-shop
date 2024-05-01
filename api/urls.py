@@ -31,5 +31,6 @@ urlpatterns = [
     path("ckeditor/", include('ckeditor_uploader.urls')),
     path('api/core/', include('core.urls')),
     path('api/blog/', include('blog.urls')),
+    path('api/payment/', include('payment.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
