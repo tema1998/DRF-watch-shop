@@ -5,6 +5,9 @@ from core.models import Order
 
 
 class CancelPaymentSerializer(serializers.Serializer):
+    """
+    Serializer for canceling payment by user.
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["user"].default = serializers.CurrentUserDefault()
@@ -24,5 +27,8 @@ class CancelPaymentSerializer(serializers.Serializer):
 
 
 class CreatePaymentSerializer(CancelPaymentSerializer):
+    """
+    Serializer for creating payment by user.
+    """
     return_url = serializers.URLField()
 
