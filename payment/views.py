@@ -21,8 +21,11 @@ class CreatePaymentView(CreateAPIView):
             serialized_data = serializer.validated_data
         else:
             return Response(serializer.errors)
-        confirmation_url = create_payment(serialized_data)
-        return Response({'confirmation_url': confirmation_url})
+        payment_url = create_payment(serialized_data)
+        if payment_url:
+            return Response({'payment_url': payment_url})
+        else:
+            return Response("Error in moment of creating payment.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class CancelPaymentView(CreateAPIView):
