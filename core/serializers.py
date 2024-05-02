@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from .models import Product, Feedback, Reviews, Brand, OrderProduct, Order
 from django.contrib.auth.models import User
@@ -166,7 +167,7 @@ class AddProductToCartSerializer(serializers.ModelSerializer):
 
         if order.payment_process:
             raise serializers.ValidationError("Order in process of payment. Wait about 10 minutes to automatically "
-                                              "cancel order or cansel it.")
+                                              "cancel order or cancel it.")
         if created:
             return ordered_product
         else:
@@ -205,7 +206,16 @@ class RemoveProductFromCartSerializer(serializers.ModelSerializer):
         """
         user = self.validated_data["user"]
         product = self.validated_data["product"]
+        order = get_object_or_404(
+            Order,
+            user=user,
+            is_ordered=False,
+        )
         ordered_product = OrderProduct.objects.get(user=user, product=product)
+
+        if order.payment_process:
+            raise serializers.ValidationError("Order in process of payment. Wait about 10 minutes to automatically "
+                                              "cancel order or cancel it.")
         if ordered_product.quantity == 1:
             ordered_product.delete()
             return "The product was successfully removed from your cart."
