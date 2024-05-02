@@ -48,6 +48,21 @@ def create_payment(serialized_data):
         return payment_process.payment_url
 
 
+def cancel_payment(serialized_data):
+    user = serialized_data['user']
+    order = Order.objects.get(
+            user=user,
+            is_ordered=False,
+        )
+
+    if order.payment_process:
+        payment_process = order.payment_process
+        payment_process.delete()
+        return True
+    else:
+        return False
+
+
 def payment_acceptance(response):
     try:
         payment_process = PaymentProcess.objects.get(payment_id=response['object']['id'])
