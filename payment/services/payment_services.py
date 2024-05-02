@@ -5,6 +5,7 @@ from yookassa import Payment, Configuration
 import uuid
 
 from core.models import Order, PaymentProcess
+from payment.services.products_quantity_control_services import decrease_quantity_of_products_in_shop
 
 Configuration.account_id = os.getenv('YOOKASSA_ACCOUNT_ID', '378591')
 Configuration.secret_key = os.getenv('YOOKASSA_SECRET_KEY', 'test_3LvWNqOjroU0MFy57p03e01ECXGsyAKhWn1vB9lsxYU')
@@ -42,6 +43,7 @@ def create_payment(serialized_data):
     if order.payment_process:
         return order.payment_process.payment_url
     else:
+        decrease_quantity_of_products_in_shop(order)
         payment_process = PaymentProcess.objects.create(payment_id=payment.id, payment_url=payment.confirmation.confirmation_url)
         order.payment_process = payment_process
         order.save()
