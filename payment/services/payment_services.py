@@ -64,7 +64,6 @@ def cancel_payment(serialized_data):
             user=user,
             is_ordered=False,
         )
-
     if order.payment_process:
         with transaction.atomic():
             cancel_decrease_quantity_of_products_in_shop(order)
@@ -94,5 +93,8 @@ def payment_acceptance(response):
         payment_process.save()
 
     elif response['event'] == 'payment.canceled':
-        payment_process.delete()
+        with transaction.atomic():
+            cancel_decrease_quantity_of_products_in_shop(order)
+            payment_process = order.payment_process
+            payment_process.delete()
     return True

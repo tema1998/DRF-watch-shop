@@ -1,17 +1,22 @@
 import json
 
-from django.shortcuts import render
 
 from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
 
 from payment.serializers import CreatePaymentSerializer, CancelPaymentSerializer
 from payment.services.payment_services import create_payment, payment_acceptance, cancel_payment
 
 
 class CreatePaymentView(CreateAPIView):
+    """
+    post:
+        Create a payment to user's order(products in the cart).
+        Returns payment url(yookassa).
+    """
+
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CreatePaymentSerializer
 
@@ -29,6 +34,13 @@ class CreatePaymentView(CreateAPIView):
 
 
 class CancelPaymentView(CreateAPIView):
+    """
+    post:
+        Cancel the current payment to user's order(products in the cart).
+        Returns products quantity in the shop.
+        Returns response status 200 or 400.
+    """
+
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CancelPaymentSerializer
 
@@ -46,11 +58,18 @@ class CancelPaymentView(CreateAPIView):
 
 
 class AcceptPaymentView(CreateAPIView):
+    """
+    post:
+        Only for Yookassa using. Get response from Yookassa.
+        If payment is succeeded - complete the order.
+        If payment is canceled - delete payment process,
+        returns products quantity in the shop.
+        Returns response status 200 or 400.
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         response = json.loads(request.body)
-
         if payment_acceptance(response):
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
