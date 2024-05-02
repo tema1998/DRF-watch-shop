@@ -14,6 +14,12 @@ Configuration.secret_key = os.getenv('YOOKASSA_SECRET_KEY', 'test_3LvWNqOjroU0MF
 
 
 def create_payment(serialized_data):
+    """
+    Service creates payment(Yookassa) object,
+    decrease quantity of products in the shop(temporary).
+    Returns payment url.
+    """
+
     user = serialized_data['user']
     order = Order.objects.get(
             user=user,
@@ -45,7 +51,6 @@ def create_payment(serialized_data):
     if order.payment_process:
         return order.payment_process.payment_url
     else:
-
         with transaction.atomic():
             decrease_quantity_of_products_in_shop(order)
             payment_process = PaymentProcess.objects.create(payment_id=payment.id, payment_url=payment.confirmation.confirmation_url)
@@ -59,6 +64,11 @@ def create_payment(serialized_data):
 
 
 def cancel_payment(serialized_data):
+    """
+    Service cancel payment(Yookassa),
+    returns quantity of products in the shop.
+    Returns bool.
+    """
     user = serialized_data['user']
     order = Order.objects.get(
             user=user,
@@ -74,7 +84,12 @@ def cancel_payment(serialized_data):
         return False
 
 
-def payment_acceptance(response):
+def payment_accept_or_cancel(response):
+    """
+    Service accept or cancel payment(Yookassa),
+    returns quantity of products in the shop.
+    Returns bool.
+    """
     try:
         payment_process = PaymentProcess.objects.get(payment_id=response['object']['id'])
         order = Order.objects.get(

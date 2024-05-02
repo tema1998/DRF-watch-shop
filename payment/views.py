@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 
 from payment.serializers import CreatePaymentSerializer, CancelPaymentSerializer
-from payment.services.payment_services import create_payment, payment_acceptance, cancel_payment
+from payment.services.payment_services import create_payment, payment_accept_or_cancel, cancel_payment
 
 
 class CreatePaymentView(CreateAPIView):
@@ -70,6 +70,6 @@ class AcceptPaymentView(CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         response = json.loads(request.body)
-        if payment_acceptance(response):
+        if payment_accept_or_cancel(response):
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
