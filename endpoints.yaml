@@ -219,6 +219,50 @@ paths:
       type: string
       format: slug
       pattern: ^[-a-zA-Z0-9_]+$
+  /core/cart/:
+    get:
+      operationId: core_cart_list
+      description: Get product from the cart of current user.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - core
+    parameters: []
+  /core/cart/add/:
+    post:
+      operationId: core_cart_add_create
+      description: |-
+        Add product to cart of current user.
+        parameters = [product_id]
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AddProductToCart'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/AddProductToCart'
+      tags:
+      - core
+    parameters: []
+  /core/cart/remove/:
+    post:
+      operationId: core_cart_remove_create
+      description: |-
+        Remove product from cart of current user.
+        parameters = [product_id]
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - core
+    parameters: []
   /core/feedback/:
     get:
       operationId: core_feedback_list
@@ -485,6 +529,63 @@ paths:
       in: path
       required: true
       type: string
+  /payment/accept/:
+    post:
+      operationId: payment_accept_create
+      description: |-
+        Only for Yookassa using. Get response from Yookassa.
+            If payment is succeeded - complete the order.
+            If payment is canceled - delete payment process,
+            returns products quantity in the shop.
+            Returns response status 200 or 400.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - payment
+    parameters: []
+  /payment/cancel/:
+    post:
+      operationId: payment_cancel_create
+      description: |-
+        Cancel the current payment to user's order(products in the cart).
+            Returns products quantity in the shop.
+            Returns response status 200 or 400.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CancelPayment'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/CancelPayment'
+      tags:
+      - payment
+    parameters: []
+  /payment/create/:
+    post:
+      operationId: payment_create_create
+      description: |-
+        Create a payment to user's order(products in the cart).
+            Returns payment url(yookassa).
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CreatePayment'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/CreatePayment'
+      tags:
+      - payment
+    parameters: []
   /refresh_token/:
     post:
       operationId: refresh_token_create
@@ -570,6 +671,17 @@ definitions:
         title: Likes
         type: string
         readOnly: true
+  AddProductToCart:
+    required:
+    - product
+    type: object
+    properties:
+      product:
+        title: Product
+        type: integer
+      user:
+        title: User
+        type: integer
   Feedback:
     required:
     - review
@@ -771,6 +883,29 @@ definitions:
         type: string
         format: date-time
         readOnly: true
+  CancelPayment:
+    type: object
+    properties:
+      user:
+        title: User
+        type: string
+        default: AnonymousUser
+        minLength: 1
+  CreatePayment:
+    required:
+    - return_url
+    type: object
+    properties:
+      user:
+        title: User
+        type: string
+        default: AnonymousUser
+        minLength: 1
+      return_url:
+        title: Return url
+        type: string
+        format: uri
+        minLength: 1
   TokenRefresh:
     required:
     - refresh
