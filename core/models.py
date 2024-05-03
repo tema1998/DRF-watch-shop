@@ -44,7 +44,7 @@ class Product(models.Model):
     image = models.ImageField(verbose_name="Image")
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Date of creation")
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
-    price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Price, $")
+    price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Price, rub")
     is_available = models.BooleanField(default=True, verbose_name="Availability")
     quantity = models.PositiveIntegerField(verbose_name="Quantity")
     discount = models.IntegerField(default=0, verbose_name="Discount, %")
@@ -76,6 +76,9 @@ class PaymentProcess(models.Model):
     status = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date of creation")
 
+    def __str__(self):
+        return f"Payment #{self.payment_id}"
+
 
 class Order(models.Model):
     """
@@ -84,8 +87,8 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
     is_ordered = models.BooleanField(default=False, verbose_name="Is ordered")
-    payment_process = models.ForeignKey(PaymentProcess, null=True, on_delete=models.SET_NULL, related_name="order", verbose_name='Payment',
-                                blank=True)
+    payment_process = models.ForeignKey(PaymentProcess, null=True, on_delete=models.SET_NULL, related_name="order",
+                                        verbose_name='Payment', blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date of creation")
 
     def __str__(self):
@@ -119,7 +122,7 @@ class OrderProduct(models.Model):
 
 class Feedback(models.Model):
     """
-    Model for storing feedback.
+    Model for storing feedback to site.
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
@@ -127,19 +130,22 @@ class Feedback(models.Model):
     review = models.CharField(max_length=1000, verbose_name="Review")
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Date of creation")
 
+    def __str__(self):
+        return f"{self.user}'s feedback ID={self.pk}"
+
 
 class Reviews(models.Model):
     """
-    Model for storing reviews to watches.
+    Model for storing reviews to products.
     """
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    text = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews', verbose_name="Product")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews', verbose_name="User")
+    text = models.TextField(verbose_name="Review text")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Date of creation")
 
     class Meta:
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.text
+        return f"{self.user}'s review ID={self.pk}"
