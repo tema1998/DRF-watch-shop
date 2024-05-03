@@ -8,10 +8,15 @@
 * ![Gunicorn][Gunicorn]
 * ![PostgreSQL][PostgreSQL]
 * ![NuxtJS][NuxtJS]
+* ![Yookassa][Yookassa]
 
 ## Features
 * Get token using simple-jwt after authentication.
 * Products
+* Add products to cart.
+* Delete products to cart.
+* Create payment to orders in the Cart.
+* Payment system: Yookassa.
 * Review to product
 * Feedback to shop
 * News blog
@@ -40,6 +45,17 @@ POSTGRES_DB=mydb
 DJANGO_DEVELOPMENT=0
 DJANGO_SETTINGS_MODULE="api.settings"
 SECRET_KEY=your_secret_key
+YOOKASSA_ACCOUNT_ID=yookassa_account_id
+YOOKASSA_SECRET_KEY=yookassa_secret_key
+```
+
+## Yookassa settings
+Create an account [https://yookassa.ru/yooid/signup/](https://yookassa.ru/yooid/signup/).
+In the http events notification turn on only 'payment.succeeded' and 'payment.canceled'.
+In .env file, set your yookassa account data.
+```
+YOOKASSA_ACCOUNT_ID=yookassa_account_id
+YOOKASSA_SECRET_KEY=yookassa_secret_key
 ```
 
 ## Run docker
@@ -60,3 +76,4 @@ docker stop $(docker ps -q)
 [Gunicorn]: https://img.shields.io/badge/gunicorn-000000?style=for-the-badge&logo=gunicorn&logoColor
 [Nginx]: https://img.shields.io/badge/nginx-000000?style=for-the-badge&logo=nginx&logoColor=green
 [NuxtJS]: https://img.shields.io/badge/nuxtjs-000000?style=for-the-badge&logo=javascript&logoColor
+[Yookassa]: https://img.shields.io/badge/yookassa-000000?style=for-the-badge&logo=yookassa&logoColor
