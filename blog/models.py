@@ -11,7 +11,7 @@ class News(models.Model):
     """
     Model for storing news.
     """
-    slug = models.SlugField(unique=True, verbose_name="Slug")
+    slug = models.SlugField(blank=True, unique=True, verbose_name="Slug")
     title = models.CharField(max_length=200, verbose_name="Title")
     text = RichTextUploadingField(verbose_name="News text")
     image = models.ImageField(verbose_name="Image")
