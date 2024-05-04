@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 from .views import NewsViewSet, LikeNews, CommentsList, CommentCreate, CommentUpdateDelete
 
+app_name = 'blog'
 router = DefaultRouter()
 router.register('news', NewsViewSet, basename='news')
 
