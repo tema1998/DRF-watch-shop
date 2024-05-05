@@ -3,8 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from core import views
-from core.models import PaymentProcess, Order, Country, Brand, Product, OrderProduct, Reviews, Feedback
+from core.models import Order, Country, Brand, Product, OrderProduct, Reviews, Feedback
 
 
 class TestCoreAPI(APITestCase):
@@ -14,7 +13,6 @@ class TestCoreAPI(APITestCase):
         token_response = self.client.post(reverse('token'), data={'username': 'user1', 'password': 'pass1'}, format='json')
         self.access_token = token_response.data['access']
 
-        # self.payment_process = PaymentProcess.objects.create(payment_id="234", payment_url='payment_url')
         self.order = Order.objects.create(user=self.user)
         self.country = Country.objects.create(name="test country")
         self.brand = Brand.objects.create(name="test brand", country=self.country, description='test description')
