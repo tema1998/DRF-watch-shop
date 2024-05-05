@@ -3,6 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import ProductViewSet, RegisterView, ProfileView, FeedbackView, ReviewsView, Cart, AddProductToCart, \
     RemoveProductFromCart
 
+app_name = 'core'
+
 router = DefaultRouter()
 router.register('products', ProductViewSet, basename='products')
 
