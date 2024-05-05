@@ -42,7 +42,7 @@ class NewsViewSet(viewsets.ModelViewSet):
     search_fields = ['title', 'text']
     filter_backends = (filters.SearchFilter,)
     serializer_class = NewsSerializer
-    queryset = News.objects.all()
+    queryset = News.objects.all().order_by('created_at')
     lookup_field = 'slug'
     pagination_class = PageNumberSetPagination
 
@@ -57,7 +57,7 @@ class LikeNews(APIView):
     """
     post:
         Like the news.
-        parameters = [slug]
+        parameters = [PK of news]
     """
     permission_classes = [permissions.IsAuthenticated]
 
@@ -73,7 +73,7 @@ class LikeNews(APIView):
         return Response(
             {"ok": "Your request was successful.",
              },
-            status=200,
+            status=201,
         )
 
 
@@ -109,7 +109,7 @@ class CommentCreate(APIView):
         serializer = CommentUpdateCreateSerializer(data=request.data)
 
         if serializer.is_valid():
-            news = get_object_or_404(News, pk=serializer.data.get('news_id'))
+            news = get_object_or_404(News, id=request.data['news_id'])
             comment = Comment.objects.create(
                 text=serializer.data.get('text'),
                 news=news,

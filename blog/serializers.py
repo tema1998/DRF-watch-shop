@@ -50,7 +50,7 @@ class CommentUpdateCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
-            "id", "news_id", "text", "user"
+            "id", "text", "user"
         ]
-        read_only_fields = ("id", "user", "news_id")
+        read_only_fields = ("id", "user")
 
