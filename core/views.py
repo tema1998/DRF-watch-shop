@@ -44,7 +44,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     search_fields = ['model', 'brand']
     filter_backends = (filters.SearchFilter,)
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by('-created_at')
     lookup_field = 'slug'
     pagination_class = PageNumberSetPagination
 
@@ -108,7 +108,7 @@ class ReviewsView(generics.ListCreateAPIView):
     """
     get:
         Returns the list of reviews to product by slug.
-        parameters = [slug]
+        parameters = [product_slug]
     post:
         Create review. Returns created review.
         parameters = [product_id, text]
