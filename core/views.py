@@ -108,10 +108,10 @@ class ReviewsView(generics.ListCreateAPIView):
     """
     get:
         Returns the list of reviews to product by slug.
-        parameters = [product_slug]
+        parameters = [product(slug)]
     post:
         Create review. Returns created review.
-        parameters = [product_id, text]
+        parameters = [product(id), text]
     """
     permission_classes = [permissions.AllowAny]
     queryset = Reviews.objects.all()
