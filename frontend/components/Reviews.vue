@@ -50,9 +50,8 @@ export default {
     methods: {
         async addComment() {
         try {
-            let response = await this.$axios.post('http://localhost:8000/api/reviews/', {
-            product: this.$props.product.slug,
-            username: this.user.username,
+            let response = await this.$axios.post('http://localhost:8000/api/core/reviews/', {
+            product: this.$props.product.id,
             text: this.new_review,
         })
             this.new_review = '';

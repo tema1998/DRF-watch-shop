@@ -93,7 +93,7 @@
     },
     async asyncData({route}) {
       let page_and_search = route.query.page !== undefined ? `?page=${route.query.page}&search=${route.query.search}` : `?search=${route.query.search}`;
-      const { data } = await axios.get(`http://localhost:8000/api/products/${page_and_search}`);
+      const { data } = await axios.get(`http://localhost:8000/api/core/products/${page_and_search}`);
       // let next = data.next != null ? `?page=${route.query.page}&q=${route.query.q}` : `?q=${route.query.q}`;
       let next = data.next != null ? data.next.split('/')[5] : data.next;
       let previous = data.previous != null ? data.previous.split('/')[5] : data.previous;

@@ -5,61 +5,30 @@
             with us!
         </p>
 
-        <div class="mb-4" v-bind:class="{ 'fld-error': $v.form.name.$error }">
+
+        <div class="mb-4" v-bind:class="{ 'fld-error': $v.form.image.$error }">
             <div>
-                <label for="name" class="text-sm leading-7 text-gray-600">Your name</label>
-                <input @input="$v.form.name.$touch()" v-model="form.name" type="text" id="name" name="name" class="w-full rounded border border-gray-300 bg-white py-1 px-3 text-base leading-8 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" />
+                <label for="image" class="text-sm leading-7 text-gray-600">Image</label>
+                <input @input="$v.form.image.$touch()"  v-model="form.image" type="text" id="image" name="image" class="w-full rounded border border-gray-300 bg-white py-1 px-3 text-base leading-8 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" />
             </div>
 
-            <span class="msg-error" v-if="!$v.form.name.required">
-                <small>Required field.</small>
-            </span>
-
-            <span class="msg-error" v-if="!$v.form.name.minLength">
-                <small>The length cannot be less than {{ $v.form.name.$params.minLength.min }} characters.</small>
-            </span>
-            
-        </div>
-
-        <div class="mb-4" v-bind:class="{ 'fld-error': $v.form.email.$error }">
-            <div>
-                <label for="email" class="text-sm leading-7 text-gray-600">Your Email</label>
-                <input @input="$v.form.email.$touch()"  v-model="form.email"  type="email" id="email" name="email" class="w-full rounded border border-gray-300 bg-white py-1 px-3 text-base leading-8 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" />
-            </div>
-
-            <span class="msg-error" v-if="!$v.form.email.required">
-                <small>Required field.</small>
-            </span>
-
-            <span class="msg-error" v-if="!$v.form.email.email">
-                <small>Please, enter email</small>
-            </span>
-            
-        </div>
-
-        <div class="mb-4" v-bind:class="{ 'fld-error': $v.form.subject.$error }">
-            <div>
-                <label for="subject" class="text-sm leading-7 text-gray-600">Subject</label>
-                <input @input="$v.form.subject.$touch()"  v-model="form.subject" type="text" id="subject" name="subject" class="w-full rounded border border-gray-300 bg-white py-1 px-3 text-base leading-8 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" />
-            </div>
-
-            <span class="msg-error" v-if="!$v.form.subject.required">
+            <span class="msg-error" v-if="!$v.form.image.required">
                 <small>Required field</small>
             </span>
 
-            <span class="msg-error" v-if="!$v.form.subject.minLength">
-                <small>The length cannot be less than {{ $v.form.subject.$params.minLength.min }} characters.</small>
+            <span class="msg-error" v-if="!$v.form.image.minLength">
+                <small>The length cannot be less than {{ $v.form.image.$params.minLength.min }} characters.</small>
             </span>
             
         </div>
 
-        <div class="mb-4" v-bind:class="{ 'fld-error': $v.form.message.$error }">
+        <div class="mb-4" v-bind:class="{ 'fld-error': $v.form.review.$error }">
             <div>
-                <label for="message" class="text-sm leading-7 text-gray-600">Message</label>
-                <textarea @input="$v.form.message.$touch()"  v-model="form.message"  id="message" name="message" class="h-32 w-full resize-none rounded border border-gray-300 bg-white py-1 px-3 text-base leading-6 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"></textarea>
+                <label for="review" class="text-sm leading-7 text-gray-600">Review</label>
+                <textarea @input="$v.form.review.$touch()"  v-model="form.review"  id="review" name="review" class="h-32 w-full resize-none rounded border border-gray-300 bg-white py-1 px-3 text-base leading-6 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"></textarea>
             </div>
             
-            <span class="msg-error" v-if="!$v.form.message.required">
+            <span class="msg-error" v-if="!$v.form.review.required">
                 <small>Required field</small>
             </span>
         </div>
@@ -76,24 +45,20 @@ export default {
     data() {
     return {
       form: {
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
+        image: '',
+        review: '',
         }
         }
     },
     methods: {
         submitForm() {
             let contactFormData = new FormData();
-            contactFormData.set('name', this.form.name);
-            contactFormData.set('email', this.form.email);
-            contactFormData.set('subject', this.form.subject);
-            contactFormData.set('message', this.form.message);
+            contactFormData.set('image', this.form.image);
+            contactFormData.set('review', this.form.review);
             console.log('submittting data...');
             axios({
             method: 'post',
-            url: 'http://localhost:8000/api/feedback/',
+            url: 'http://localhost:8000/api/core/feedback/',
             data: contactFormData
             }).then(function(response){
                 console.log(response);
@@ -110,19 +75,11 @@ export default {
     },
     validations: {
         form: {
-            name: {
-            required,
-            minLength: minLength( 4 )
-            },
-            email: {
-            email,
-            required
-            },
-            subject: {
+            image: {
             required,
             minLength: minLength( 2 )
             },
-            message: {
+            review: {
             required,
             }
         }
