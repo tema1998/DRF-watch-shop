@@ -54,7 +54,7 @@ export default {
   methods: {
     async userRegister() {
       try {
-        let response = await this.$axios.post('/api/register/', {
+        let response = await this.$axios.post('/api/core/register/', {
           username: this.register.username,
           password: this. register.password,
           password2: this.register.password2

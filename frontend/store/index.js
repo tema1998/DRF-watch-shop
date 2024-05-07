@@ -28,7 +28,7 @@ export const mutations = {
 export const actions = {
     async loadAllPosts({commit}, {query_page}) {
         let page = query_page !== undefined ? `?page=${query_page}` : '';
-        const { data } = await this.$axios.get(`http://127.0.0.1:8000/api/products/${page}`);
+        const { data } = await this.$axios.get(`http://127.0.0.1:8000/api/core/products/${page}`);
         let next = data.next != null ? data.next.split('/')[5] : data.next;
         let previous = data.previous != null ? data.previous.split('/')[5] : data.previous;
         let current_page = query_page
