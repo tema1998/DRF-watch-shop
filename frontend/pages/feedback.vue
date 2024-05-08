@@ -43,11 +43,11 @@ import { required, minLength, email } from 'vuelidate/lib/validators'
 
 export default {
     data() {
-    return {
-      form: {
-        image: '',
-        review: '',
-        }
+        return {
+            form: {
+                image: '',
+                review: '',
+            }
         }
     },
     methods: {
