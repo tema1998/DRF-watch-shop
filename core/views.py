@@ -113,7 +113,7 @@ class ReviewsView(generics.ListCreateAPIView):
         Create review. Returns created review.
         parameters = [product(id), text]
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Reviews.objects.all().select_related('user')
     serializer_class = ReviewsSerializer
 
