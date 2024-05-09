@@ -27,9 +27,9 @@
             <article v-for="review in reviews" :key="review.id" class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
                 <footer class="flex justify-between items-center mb-2">
                     <div class="flex items-center">
-                        <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">{{ review.username }}</p>
+                        <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">{{ review.user }}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-08"
-                                title="February 8th, 2022">{{ review.created_date }}</time></p>
+                                title="February 8th, 2022">{{ review.created_at }}</time></p>
                     </div>
                 </footer>
                 <p class="text-gray-500 dark:text-gray-400">{{ review.text }}</p>
@@ -50,10 +50,11 @@ export default {
     methods: {
         async addComment() {
         try {
-            let response = await this.$axios.post('http://localhost:8000/api/core/reviews/', {
+            let response = await this.$axios.post('http://localhost:8000/api/core/reviews/', 
+            {
             product: this.$props.product.id,
             text: this.new_review,
-        })
+            })
             this.new_review = '';
             this.reviews.splice(0, 0, response.data)
         console.log(response)

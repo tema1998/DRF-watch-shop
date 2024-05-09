@@ -32,7 +32,7 @@
                 <small>Required field</small>
             </span>
         </div>
-        <button class="rounded border-0 bg-indigo-500 py-2 px-6 text-lg text-white hover:bg-indigo-600 focus:outline-none" @click.prevent="submitForm" :disabled='!isComplete'>Send</button>
+        <button class="rounded border-0 bg-indigo-500 py-2 px-6 text-lg text-white hover:bg-indigo-600 focus:outline-none" @click.prevent="sendFeedback" :disabled='!isComplete'>Send</button>
     </div>
 </template>
 
@@ -51,32 +51,29 @@ export default {
         }
     },
     methods: {
-        submitForm() {
-            let contactFormData = new FormData();
-            contactFormData.set('image', this.form.image);
-            contactFormData.set('review', this.form.review);
-            console.log('submittting data...');
-            axios({
-            method: 'post',
-            url: 'http://localhost:8000/api/core/feedback/',
-            data: contactFormData
-            }).then(function(response){
-                console.log(response);
-            }).catch(function (response){
-                console.log(response);
-            });
-            this.$router.push("success");
+        async sendFeedback() {
+        try {
+            console.log(this.form.image);
+            console.log(this.form.review);
+            let response = await this.$axios.post('http://localhost:8000/api/core/feedback/', 
+            {
+            review: this.form.review,
+            })
+        console.log(response)
+        } catch (err) {
+            console.log(err)
         }
+        this.$router.push("success");
+        },
     },
     computed: {
-      isComplete () {
-        return !this.$v.$invalid;
-      }
+        isComplete () {
+            return !this.$v.$invalid;
+        },
     },
     validations: {
         form: {
             image: {
-            required,
             minLength: minLength( 2 )
             },
             review: {

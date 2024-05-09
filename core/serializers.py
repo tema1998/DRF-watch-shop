@@ -81,6 +81,9 @@ class ReviewsSerializer(serializers.ModelSerializer):
     """
     Serializer for review model.
     """
+
+    user = serializers.StringRelatedField()
+
     class Meta:
         model = Reviews
         fields = ("id", "product", "user", "text", "created_at")

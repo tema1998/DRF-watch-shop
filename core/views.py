@@ -93,7 +93,7 @@ class FeedbackView(generics.ListCreateAPIView):
         parameters = [review, image]
     """
 
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
 
@@ -113,8 +113,8 @@ class ReviewsView(generics.ListCreateAPIView):
         Create review. Returns created review.
         parameters = [product(id), text]
     """
-    permission_classes = [permissions.AllowAny]
-    queryset = Reviews.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Reviews.objects.all().select_related('user')
     serializer_class = ReviewsSerializer
 
     def get_queryset(self):

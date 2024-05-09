@@ -56,14 +56,14 @@ export default {
     components: {
         Reviews
     },
-async asyncData({params}) {
-    const product = await axios.get(`http://127.0.0.1:8000/api/core/products/${params.slug}`);
-    const reviews = await axios.get(`http://127.0.0.1:8000/api/core/reviews/${params.slug}`);
-    return {
-        product: product.data,
-        reviews: reviews.data
-    }
-},
+    async asyncData({params}) {
+        const product = await axios.get(`http://127.0.0.1:8000/api/core/products/${params.slug}`);
+        const reviews = await axios.get(`http://127.0.0.1:8000/api/core/reviews/${params.slug}`);
+        return {
+            product: product.data,
+            reviews: reviews.data
+        }
+    },
 }
 </script>
 
