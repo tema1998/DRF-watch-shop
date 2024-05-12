@@ -3,10 +3,12 @@
 
     <div class="flex flex-col lg:flex-row lg:justify-around justify-center lg:items-stretch items-center mt-5">
       
-      <div v-for="product in products" :key="product.slug" class="my-2 lg:my-0 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-600 dark:border-gray-700">
-        <nuxt-link :to="`/products/${product.slug}`" >
-            <img class="p-8 rounded-t-lg" :src="product.image" alt="product image" />
-        </nuxt-link>
+      <div v-for="product in products" :key="product.slug" class="flex flex-col justify-between my-2 lg:my-0 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-600 dark:border-gray-700">
+        <div class="flex justify-center items-center ">
+          <nuxt-link :to="`/products/${product.slug}`" >
+              <img class="p-8 rounded-t-lg max-h-96" :src="product.image" alt="product image" />
+          </nuxt-link>
+        </div>
         <div class="px-5 pb-5">
             <nuxt-link :to="`/products/${product.slug}`" >
                 <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ product.model }}</h5>
@@ -36,6 +38,7 @@
                 <a @click.prevent="addToCart(product_id=`${product.id}`)" href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add to cart</a>
             </div>
         </div>
+
       </div>
       
     </div>
@@ -102,12 +105,10 @@ export default {
   methods: {
     async addToCart(product_id) {
       try {
-          console.log(product_id);
           let response = await this.$axios.post('http://localhost:8000/api/core/cart/add/', 
           {
           product: product_id,
           })
-      console.log(response)
       } catch (err) {
           console.log(err)
       }
