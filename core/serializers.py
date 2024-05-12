@@ -15,6 +15,7 @@ class ProductSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
     brand = serializers.SlugRelatedField(slug_field="name", queryset=Brand.objects.all())
     discount = serializers.IntegerField(validators=[validator_of_discount])
+    image = serializers.ImageField(use_url=True)
 
     class Meta:
         model = Product
@@ -98,17 +99,11 @@ class OrderProductSerializer(serializers.ModelSerializer):
     """
     Serializer for OrderProduct model.
     """
-    product = serializers.SerializerMethodField()
+    product = ProductSerializer()
 
     class Meta:
         model = OrderProduct
         fields = ["product", "quantity", "total_price"]
-
-    def get_product(self,obj):
-        """
-        Method to get the model of product and to display it instead of ID.
-        """
-        return obj.product.model
 
 
 class CartSerializer(serializers.ModelSerializer):

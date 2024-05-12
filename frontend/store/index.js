@@ -38,5 +38,5 @@ export const actions = {
         commit('SET_NEXT', next)
         commit('SET_PREVIOUS', previous)
         commit('SET_CURRENT_PAGE', Number(current_page))
-    }
+    },
 }

@@ -140,7 +140,7 @@ class Cart(APIView):
     def get(self, request):
         queryset = Order.objects.filter(user=request.user, is_ordered=False)
         if queryset:
-            serializer = CartSerializer(queryset[0])
+            serializer = CartSerializer(queryset[0], context={"request": request})
             return Response(serializer.data)
         return Response("your cart is empty", status=status.HTTP_403_FORBIDDEN)
 

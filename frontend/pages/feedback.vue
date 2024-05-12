@@ -53,8 +53,6 @@ export default {
     methods: {
         async sendFeedback() {
         try {
-            console.log(this.form.image);
-            console.log(this.form.review);
             let response = await this.$axios.post('http://localhost:8000/api/core/feedback/', 
             {
             review: this.form.review,
