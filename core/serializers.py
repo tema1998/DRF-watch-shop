@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from .models import Product, Feedback, Reviews, Brand, OrderProduct, Order
+from .models import Product, Feedback, Reviews, Brand, OrderProduct, Order, PaymentProcess
 from django.contrib.auth.models import User
 
 
@@ -106,6 +106,12 @@ class OrderProductSerializer(serializers.ModelSerializer):
         fields = ["product", "quantity", "total_price"]
 
 
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentProcess
+        fields = ["payment_url"]
+
+
 class CartSerializer(serializers.ModelSerializer):
     """
     Serializer for Order model.
@@ -114,10 +120,11 @@ class CartSerializer(serializers.ModelSerializer):
     """
     ordered_products = OrderProductSerializer(many=True)
     user = serializers.StringRelatedField()
+    payment_process = PaymentSerializer()
 
     class Meta:
         model = Order
-        fields = ["user", "ordered_products", "is_ordered", "order_price", "created_at"]
+        fields = ["user", "ordered_products", "is_ordered", "order_price", "created_at", "payment_process"]
 
 
 class AddProductToCartSerializer(serializers.ModelSerializer):
