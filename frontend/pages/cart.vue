@@ -57,7 +57,7 @@
           <a @click.prevent="create_payment()" href="#" class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">Create payment</a>
         </div>
 
-        <div v-else> 
+        <div v-else :key="payment_url"> 
           <a @click.prevent="redirectToPaymentUrl()" class="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">Payment page</a>
           <a @click.prevent="cancel_payment()" href="#" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Cancel payment</a>
         </div>
@@ -87,6 +87,7 @@ export default {
       payment_url: null,
     }
   },
+
   async asyncData({$axios}) {
     try {
         let { data }  = await $axios.get('http://localhost:8000/api/core/cart/')
@@ -130,12 +131,10 @@ export default {
 
     async create_payment() {
       try {
-          let { response } = await this.$axios.post('http://localhost:8000/api/payment/create/',
+          let response = await this.$axios.post('http://localhost:8000/api/payment/create/',
             {return_url: 'http://localhost:3000/cart'}
           )
-          return {
-            payment_url: response.payment_url,
-          }
+          this.payment_url = response.data.payment_url;
       } catch (err) {
           console.log(err)
       }
@@ -144,9 +143,7 @@ export default {
     async cancel_payment() {
       try {
           let response = await this.$axios.post('http://localhost:8000/api/payment/cancel/')
-          return {
-            payment_url: null,
-          }
+          this.payment_url = null;
       } catch (err) {
           console.log(err)
       }
