@@ -20,10 +20,16 @@ import Footer from "~/components/Footer";
 
 
 export default {
+  data() {
+      return {
+      }
+  },
+
   components: {
     Navbar,
     Footer,
   },
+
   head() {
     return {
       link: [
@@ -31,7 +37,7 @@ export default {
       ]
     }
   },
-};
+}
 </script>
 
 <style>

@@ -49,7 +49,7 @@
 
     <div class="flex flex-col m-5 justify-center items-center">
       <div class="py-5">
-      <span class="font-medium">Total price:</span> <span class="font-bold"> {{order_price}} </span>
+      <span class="font-medium">Total price:</span> <span class="font-bold"> {{order_price}} $ </span>
       </div>
 
       <div>
