@@ -41,7 +41,13 @@
 
             <div class="flex items-center justify-between">
                 <span class="text-3xl font-bold text-gray-900 dark:text-white">${{ product.product.price }} </span>
-                <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add to cart</a>
+                
+                <div class="flex">
+                  <a @click.prevent="addToCart(product_id=`${product.product.id}`, product_price=`${product.product.price}`)" href="#" class="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">+</a>
+
+                  <a @click.prevent="removeFromCart(product_id=`${product.product.id}`, product_price=`${product.product.price}`)" href="#" class="ml-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">-</a>
+                </div>
+
             </div>
         </div>
       </div>
@@ -144,6 +150,34 @@ export default {
       try {
           let response = await this.$axios.post('http://localhost:8000/api/payment/cancel/')
           this.payment_url = null;
+      } catch (err) {
+          console.log(err)
+      }
+      },
+    
+    async addToCart(product_id, product_price) {
+      console.log(product_price)
+      try {
+          let response = await this.$axios.post('http://localhost:8000/api/core/cart/add/', 
+          {
+          product: product_id,
+          })
+          this.$nuxt.$emit('count-cart-after-add-product', product_price)
+
+      } catch (err) {
+          console.log(err)
+      }
+      },
+
+    async removeFromCart(product_id, product_price) {
+      console.log(product_price)
+      try {
+          let response = await this.$axios.post('http://localhost:8000/api/core/cart/remove/', 
+          {
+          product: product_id,
+          })
+          this.$nuxt.$emit('count-cart-after-remove-product', product_price)
+
       } catch (err) {
           console.log(err)
       }

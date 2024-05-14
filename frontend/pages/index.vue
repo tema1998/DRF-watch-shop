@@ -84,7 +84,6 @@
 <script>
 import { mapState } from 'vuex';
 export default {
-  props: ['orderPrice',],
   watchQuery: ['page'],
   computed: {
     ...mapState(['products', 'total', 'next', 'previous', 'current_page'])
@@ -111,7 +110,6 @@ export default {
           {
           product: product_id,
           })
-          // this.$emit("add-to-cart");
           this.$nuxt.$emit('count-cart-after-add-product', product_price)
 
       } catch (err) {
