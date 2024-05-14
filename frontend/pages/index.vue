@@ -2,7 +2,7 @@
   <div>
 
     <div class="flex flex-col lg:flex-row lg:justify-around justify-center lg:items-stretch items-center mt-5">
-      
+
       <div v-for="product in products" :key="product.slug" class="flex flex-col justify-between my-2 lg:my-0 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-600 dark:border-gray-700">
         <div class="flex justify-center items-center ">
           <nuxt-link :to="`/products/${product.slug}`" >
@@ -40,12 +40,12 @@
         </div>
 
       </div>
-      
+
     </div>
 
     <nav class="flex justify-center mt-5" aria-label="Page navigation example">
       <ul class="flex items-center -space-x-px h-10 text-base">
-        
+
         <li v-if="previous != null">
           <nuxt-link :to="previous" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
             <span class="sr-only">Previous</span>
@@ -76,7 +76,7 @@
 
       </ul>
     </nav>
-    
+
   </div>
 
 </template>
@@ -89,7 +89,7 @@ export default {
     ...mapState(['products', 'total', 'next', 'previous', 'current_page'])
   },
   async fetch({store, route}) {
-    await store.dispatch('loadAllPosts', {query_page: route.query.page})
+    await store.dispatch('cancelProducts', {query_page: route.query.page})
   },
 
   head() {
@@ -106,7 +106,7 @@ export default {
     async addToCart(product_id, product_price) {
       console.log(product_price)
       try {
-          let response = await this.$axios.post('http://localhost:8000/api/core/cart/add/', 
+          let response = await this.$axios.post('http://localhost:8000/api/core/cart/add/',
           {
           product: product_id,
           })
