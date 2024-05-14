@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <header>
-      <Navbar />
+      <Navbar :orderPrice="orderPrice" @countCartAfterAddProduct="countCartAfterAddProduct" />
     </header>
 
     <main class="grow">
-      <Nuxt />
+      <Nuxt :orderPrice="orderPrice" />
     </main>
 
     <Footer />
@@ -20,9 +20,30 @@ import Footer from "~/components/Footer";
 
 
 export default {
+  created() {
+    this.$nuxt.$on('count-cart-after-add-product', ($event) => this.countCartAfterAddProduct($event))
+  },
+
   data() {
       return {
+        orderPrice: 0,
       }
+  },
+
+  async fetch() {
+    try {
+      let cart  = await this.$axios.get('http://localhost:8000/api/core/cart/')
+      this.orderPrice = cart.data.order_price;
+    } catch (err) {
+        console.log(err)
+    };
+  },
+
+  methods: {
+    countCartAfterAddProduct(product_price) {
+      this.orderPrice += Number(product_price)
+    },
+
   },
 
   components: {

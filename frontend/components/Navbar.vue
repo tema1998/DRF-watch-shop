@@ -31,7 +31,7 @@
                 <nuxt-link to="/" class="block py-2 px-3 md:p-0 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent" aria-current="page">Home</nuxt-link>
             </li>
             <li>
-                <nuxt-link to="/cart" class="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Cart(<span class="text-orange-500"> {{order_price}} $ </span>)</nuxt-link>
+                <nuxt-link :key="orderPrice" to="/cart" class="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Cart <span v-if="loggedIn != false" class="text-orange-500">( {{orderPrice}} $) </span></nuxt-link>
             </li>
             <li>
                 <nuxt-link to="/feedback" class="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Feedback</nuxt-link>
@@ -60,23 +60,16 @@
 </template>
 
 <script>
+import { ref, watch } from 'vue';
 export default {
+  props: ['orderPrice',],
+  
   data(){
     return {
       q : null,
-      order_price : 1,
     }
   },
 
-  async fetch() {
-    try {
-      let cart  = await this.$axios.get('http://localhost:8000/api/core/cart/')
-      this.order_price = cart.data.order_price;
-    } catch (err) {
-        console.log(err)
-    };
-  },
-  fetchOnServer: false,
   methods: {
     submit(){
       this.$router.push("/search?search="+this.q);
@@ -91,6 +84,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style scoped>
