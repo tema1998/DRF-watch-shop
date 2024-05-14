@@ -41,7 +41,7 @@
 
             <div class="flex items-center justify-between">
                 <span class="text-3xl font-bold text-gray-900 dark:text-white">${{ product.product.price }} </span>
-                
+
                 <div class="flex">
                   <a @click.prevent="addToCart(product_id=`${product.product.id}`, product_price=`${product.product.price}`)" href="#" class="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">+</a>
 
@@ -60,23 +60,23 @@
 
       <div>
         <div v-if="payment_url === null">
-          <a @click.prevent="create_payment()" href="#" class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">Create payment</a>
+          <a @click.prevent="createPayment()" href="#" class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">Create payment</a>
         </div>
 
-        <div v-else :key="payment_url"> 
+        <div v-else :key="payment_url">
           <a @click.prevent="redirectToPaymentUrl()" class="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">Payment page</a>
-          <a @click.prevent="cancel_payment()" href="#" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Cancel payment</a>
+          <a @click.prevent="cancelPayment()" href="#" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Cancel payment</a>
         </div>
       </div>
 
     </div>
-    
+
   </div>
 
   <div v-else class="flex justify-center items-center p-10">
-    <nuxt-link to="/signin" >Sign In </nuxt-link> 
+    <nuxt-link to="/signin" >Sign In </nuxt-link>
     <span>&nbsp; or &nbsp;</span>
-    <nuxt-link to="/signup" >Sign Up </nuxt-link> 
+    <nuxt-link to="/signup" >Sign Up </nuxt-link>
     <span>&nbsp; to add products to cart.</span>
   </div>
 
@@ -135,7 +135,7 @@ export default {
        window.location.replace(this.payment_url)
     },
 
-    async create_payment() {
+    async createPayment() {
       try {
           let response = await this.$axios.post('http://localhost:8000/api/payment/create/',
             {return_url: 'http://localhost:3000/cart'}
@@ -146,7 +146,7 @@ export default {
       }
       },
 
-    async cancel_payment() {
+    async cancelPayment() {
       try {
           let response = await this.$axios.post('http://localhost:8000/api/payment/cancel/')
           this.payment_url = null;
@@ -154,15 +154,15 @@ export default {
           console.log(err)
       }
       },
-    
+
     async addToCart(product_id, product_price) {
       console.log(product_price)
       try {
-          let response = await this.$axios.post('http://localhost:8000/api/core/cart/add/', 
+          let response = await this.$axios.post('http://localhost:8000/api/core/cart/add/',
           {
           product: product_id,
-          })
-          this.$nuxt.$emit('count-cart-after-add-product', product_price)
+          });
+          this.$nuxt.$emit('count-cart-after-add-product', product_price);
 
       } catch (err) {
           console.log(err)
@@ -172,11 +172,11 @@ export default {
     async removeFromCart(product_id, product_price) {
       console.log(product_price)
       try {
-          let response = await this.$axios.post('http://localhost:8000/api/core/cart/remove/', 
+          let response = await this.$axios.post('http://localhost:8000/api/core/cart/remove/',
           {
           product: product_id,
-          })
-          this.$nuxt.$emit('count-cart-after-remove-product', product_price)
+          });
+          this.$nuxt.$emit('count-cart-after-remove-product', product_price);
 
       } catch (err) {
           console.log(err)
