@@ -15,13 +15,14 @@ class ProductSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
     brand = serializers.SlugRelatedField(slug_field="name", queryset=Brand.objects.all())
     discount = serializers.IntegerField(validators=[validator_of_discount])
+    price_with_discount = serializers.ReadOnlyField()
     image = serializers.ImageField(use_url=True)
 
     class Meta:
         model = Product
-        fields = ("id", "brand", "model", "slug", "description", "image", "created_at", "author", "price", "discount")
+        fields = ("id", "brand", "model", "slug", "description", "image", "created_at", "author", "price", "discount", "price_with_discount")
         lookup_field = 'slug'
-        read_only_fields = ('id', 'slug', 'created_at', 'author')
+        read_only_fields = ('id', 'slug', 'created_at', 'author', "price_with_discount")
         extra_kwargs = {
             'url': {'lookup_field': 'slug'}
         }
