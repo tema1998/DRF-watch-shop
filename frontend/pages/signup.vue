@@ -4,6 +4,10 @@
       <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Register</h2>
     </div>
 
+    <div ref="wrongData" class="hidden sm:mx-auto sm:w-full sm:max-w-sm">
+      <h2 class="mt-10 text-center text-base font-bold leading-9 tracking-tight text-red-600">Check your data, the data is incorrect!</h2>
+    </div>
+
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" action="#" method="POST">
         <div>
@@ -69,6 +73,10 @@ export default {
         this.$router.push('/')
       } catch (err) {
         console.log(err)
+        this.register.password = '';
+        this.register.password2 = '';
+        this.block_wrong_data = this.$refs.wrongData;
+        this.block_wrong_data.classList.remove('hidden');
       }
     }
   },
