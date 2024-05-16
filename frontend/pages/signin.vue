@@ -4,7 +4,11 @@
         <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
       </div>
 
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <div ref="wrongData" class="hidden sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 class="mt-10 text-center text-base font-bold leading-9 tracking-tight text-red-600">The password or login is incorrect!</h2>
+      </div>
+
+      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" action="#" method="POST">
           <div>
             <label for="login" class="block text-sm font-medium leading-6 text-gray-900">Login</label>
@@ -47,10 +51,12 @@
       async userLogin() {
         try {
           let response = await this.$auth.loginWith('local', { data: this.login})
-          console.log(response)
           this.$router.push('/')
         } catch (err) {
-          console.log(err)
+          this.login.password = '';
+          this.block_wrong_data = this.$refs.wrongData;
+          this.block_wrong_data.classList.remove('hidden');
+          console.log(this.block_wrong_data.classList)
         }
       }
     },
