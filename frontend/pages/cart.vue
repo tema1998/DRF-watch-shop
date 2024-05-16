@@ -45,13 +45,13 @@
                 </div>
                 <div v-else>
                   <span class="line-through text-3xl font-bold text-gray-900 dark:text-white">${{ product.product.price }} </span>
-                  <span class="text-3xl font-bold text-red-400 dark:text-white">${{ product.product.discount }} </span>
+                  <span class="text-3xl font-bold text-red-400 dark:text-white">${{ product.product.price_with_discount }} </span>
                 </div>
 
                 <div class="flex">
-                  <a @click.prevent="addToCart(product_id=`${product.product.id}`, product_price=`${product.product.price}`)" href="#" class="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">+</a>
+                  <a @click.prevent="addToCart(product_id=`${product.product.id}`, product_price=`${product.product.price_with_discount}`)" href="#" class="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">+</a>
 
-                  <a @click.prevent="removeFromCart(product_id=`${product.product.id}`, product_price=`${product.product.price}`)" href="#" class="ml-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">-</a>
+                  <a @click.prevent="removeFromCart(product_id=`${product.product.id}`, product_price=`${product.product.price_with_discount}`)" href="#" class="ml-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">-</a>
                 </div>
 
             </div>
