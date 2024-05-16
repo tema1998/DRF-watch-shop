@@ -44,7 +44,7 @@ class Product(models.Model):
     image = models.ImageField(verbose_name="Image")
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Date of creation")
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
-    price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Price, rub")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Price, $")
     is_available = models.BooleanField(default=True, verbose_name="Availability")
     quantity = models.PositiveIntegerField(verbose_name="Quantity")
     discount = models.IntegerField(default=0, verbose_name="Discount, %")
