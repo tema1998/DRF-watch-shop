@@ -33,6 +33,11 @@ Or use the next links:
 [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
 
 
+## Frontend(NuxtJS)
+![Index](/static/frontend1.png)
+![Cart](/static/frontend2.png)
+![Payment](/static/frontend3.png)
+
 ## Config file
 Create .env, set your data.
 ```
