@@ -113,7 +113,7 @@ class ProductTest(TestCase):
 
     def test_price_label(self):
         field_label = self.product._meta.get_field('price').verbose_name
-        self.assertEquals(field_label, 'Price, rub')
+        self.assertEquals(field_label, 'Price, $')
 
     def test_is_available_label(self):
         field_label = self.product._meta.get_field('is_available').verbose_name
