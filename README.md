@@ -34,25 +34,12 @@ Or use the next links:
 
 
 ## Frontend(NuxtJS)
-![Index](/static/frontend1.png)
-![Cart](/static/frontend2.png)
-![Payment](/static/frontend3.png)
+![Index](/readme_files/frontend1.png)
+![Cart](/readme_files/frontend2.png)
+![Payment](/readme_files/frontend3.png)
 
 ## Config file
-Create .env, set your data.
-```
-POSTGRES_ENGINE = django.db.backends.postgresql
-POSTGRES_HOST=pgdb
-POSTGRES_PORT=5432
-POSTGRES_USER=pguser
-POSTGRES_PASSWORD=password
-POSTGRES_DB=mydb
-DJANGO_DEVELOPMENT=0
-DJANGO_SETTINGS_MODULE="api.settings"
-SECRET_KEY=your_secret_key
-YOOKASSA_ACCOUNT_ID=yookassa_account_id
-YOOKASSA_SECRET_KEY=yookassa_secret_key
-```
+Create .env using .env.example.
 
 ## Yookassa settings
 Create an account [https://yookassa.ru/yooid/signup/](https://yookassa.ru/yooid/signup/).

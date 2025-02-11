@@ -4,7 +4,7 @@ import json
 from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-
+from rest_framework.views import APIView
 
 from payment.serializers import CreatePaymentSerializer, CancelPaymentSerializer
 from payment.services.payment_services import create_payment, payment_accept_or_cancel, cancel_payment
@@ -57,7 +57,7 @@ class CancelPaymentView(CreateAPIView):
             return Response("The order payment doesn't exist.", status=status.HTTP_400_BAD_REQUEST)
 
 
-class AcceptPaymentView(CreateAPIView):
+class AcceptPaymentView(APIView):
     """
     post:
         Only for Yookassa using. Get response from Yookassa.

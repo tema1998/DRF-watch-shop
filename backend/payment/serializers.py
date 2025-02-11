@@ -1,4 +1,3 @@
-from django.core.validators import MinValueValidator
 from rest_framework import serializers
 
 from core.models import Order

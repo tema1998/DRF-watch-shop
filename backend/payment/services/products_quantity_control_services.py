@@ -1,7 +1,4 @@
-from django.db import transaction
-from django.db.transaction import atomic
-
-from core.models import OrderProduct, Order
+from core.models import Order
 
 
 def decrease_quantity_of_products_in_shop(order: Order):
